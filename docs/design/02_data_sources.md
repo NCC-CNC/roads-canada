@@ -68,6 +68,38 @@ does not mean the road is gone) and AER monthly well and pipeline shapefiles
 (not road layers). Unverified or not found: forestry, oil and gas and mining
 road permits in AB, SK, MB, and oil, gas and mining roads in BC. Feeds issue #8.
 
+## Datasets used in Poley et al. (2022)
+
+From the paper's Supporting Information (S1), kept in
+`data/external/poley2022/`. All were downloaded on 2021-04-23. The authors
+did not publish their roadless-area layers or code, so Table 4 of the paper is
+the only published validation target for issue #3.
+
+| Scale | Dataset (2021 vintage) | Non-road features removed | Current status |
+| --- | --- | --- | --- |
+| Global | OSM, Geofabrik Canada extract | `fclass` of bridleway, cycleway, footway, path, pedestrian, steps | Daily extracts; the April 2021 snapshot cannot be re-downloaded |
+| Global | gROADS v1 (SEDAC) | None stated | Canada portion sourced from OSM, so not independent |
+| Global | GRIP 2018 | None stated | Canada sourced from OSM and Atlas of Canada, so not independent |
+| National | Statistics Canada Road Network File 2020 | `Class` 28 (planned), 95 (virtual) | Now the 2025 edition (see above) |
+| National | National Road Network, 13 provincial and territorial files | None stated | Annual (see above) |
+| Provincial | BC Digital Road Atlas | `TRANSPORT_LINE_TYPE_CODE.DESCRIPTION`: Ferry, Ferry passenger, Ferry resource, Private driveway demographic, Road pedestrian mall, Road proposed, Road runway, Road runway non-demographic, Road water access demographic | Same dataset as the BC DRA row above |
+| Provincial | Alberta Human Footprint 2018 | `FEATURE_TY` of AIRP-RUNWAY | Latest is now 2023 |
+| Provincial | Ontario Road Network and MNRF Road Segments (analysed separately and summed) | None stated | Same datasets as the ON row above |
+| Provincial | Addresses Quebec AQreseau+ | `ClsRte` of Rue pietonne | Succeeded by the Referentiel quebecois du transport terrestre |
+| Provincial | Nova Scotia Topographic Database Roads, Rails and Trails | `FEAT_DESC`: DRIVEWAY, FERRY CROSSING line, FOOT BRIDGE line, RAILROAD line, RAILROAD overhead, RAILROAD ruin/inactive/abandoned, three TRAIL variants and WALK (no vehicular traffic), WATER ACCESS | Same dataset as the NS row above |
+
+Notes:
+
+- The paper defines roadless areas as land at least 1 km from the nearest road
+  feature (Figure S3).
+- The OSM filter is an exclusion list. Tracks, service roads and other
+  vehicle-accessible classes stay in.
+- Only BC, AB, ON, QC and NS had provincial datasets in the paper. The other
+  provinces and territories were OSM only.
+- The paper's own data note: gROADS and GRIP are partly OSM-derived, so
+  agreement between them and OSM is not independent evidence.
+- The cleaning rules above can seed the harmonization step for issue #4.
+
 ## Implications for the pipeline
 
 1. OSM (daily Geofabrik extracts) plus Overture is the only nationally
@@ -75,7 +107,10 @@ road permits in AB, SK, MB, and oil, gas and mining roads in BC. Feeds issue #8.
 2. Best candidates for a first provincial dataset (issue #4): BC DRA (resource
    classes, monthly, licence to check), ABMI HFI (repeat years, imagery dates),
    or NB (open licence, documented forest roads).
-3. Date attributes are the missing piece everywhere; OSM history (issue #5)
+3. Reproducing the paper's OSM figures exactly is not possible, because the
+   2021 extract is gone. Compare against Table 4 approximately and report the
+   difference as a finding.
+4. Date attributes are the missing piece everywhere; OSM history (issue #5)
    and ABMI origin years are the most promising routes.
 
 ## Follow-ups
