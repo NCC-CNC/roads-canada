@@ -27,7 +27,7 @@ of 10 spot-checked links (open.yukon.ca returns 403 to automated requests).
 ## Provinces and territories
 
 | Jurisdiction | Dataset (steward) | Resource and low-use roads | Licence | Access | Update | Dates or status |
-|---|---|---|---|---|---|---|
+| --- | --- | --- | --- | --- | --- | --- |
 | BC | [DRA Master Partially-Attributed Roads](https://catalogue.data.gov.bc.ca/dataset/digital-road-atlas-dra-master-partially-attributed-roads) (GeoBC) | Yes: urban, rural and resource roads; ROAD_CLASS includes resource, recreation, skid, trail | "Access Only", free of charge; not an OGL-BC label | FGDB (258 MB), WMS, KML, BCGW download | Monthly | `DATA_CAPTURE_DATE`; no construction or decommissioning date |
 | BC | [CEF Integrated Roads](https://catalogue.data.gov.bc.ca/dataset/a489bc6a-f676-4503-8cd7-dcf0bdf2ae99) (current; [archive](https://catalogue.data.gov.bc.ca/dataset/9568a219-819d-417a-be68-8431b6fb5de0) 2021, 2024, 2025) | Merges built roads with road tenures; coarse provincial use | Access Only | FGDB, ArcGIS REST (archive) | Modified 2026-07-20 | Tenure award date is not construction date |
 | BC | [Human Disturbance 2025](https://catalogue.data.gov.bc.ca/dataset/7d61ff12-b85f-4aeb-ac8b-7b10e84b046c) | Excludes roads | Unverified | Catalogue | Annual-ish (2021, 2023, 2025) | Ranked by permanence |
@@ -47,7 +47,7 @@ of 10 spot-checked links (open.yukon.ca returns 403 to automated requests).
 ## National and global sources
 
 | Source | Notes | Licence | Access | Update |
-|---|---|---|---|---|
+| --- | --- | --- | --- | --- |
 | [Road Network File 2025](https://www150.statcan.gc.ca/n1/en/catalogue/92-500-X2025001) (Statistics Canada) | National; resource-road completeness unverified | OGL-Canada (per snippet) | GeoPackage, REST | Annual (June 2025) |
 | [National Road Network](https://open.canada.ca/data/en/dataset/3d282116-e556-400c-9306-ca1a3cada77f) (Statistics Canada, 13 provincial and territorial datasets) | Built from provincial and territorial contributions; vintage varies | OGL-Canada | GPKG, SHP, WMS, REST | Annual |
 | [OSM extracts](https://download.geofabrik.de/north-america/canada.html) (Geofabrik) | Canada and every province and territory, plus tracks as mapped; per-feature timestamps stripped from public extracts | ODbL | PBF | Daily |
