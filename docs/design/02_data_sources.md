@@ -77,7 +77,7 @@ the only published validation target for issue #3.
 
 | Scale | Dataset (2021 vintage) | Non-road features removed | Current status |
 | --- | --- | --- | --- |
-| Global | OSM, Geofabrik Canada extract | `fclass` of bridleway, cycleway, footway, path, pedestrian, steps | Daily extracts; the April 2021 snapshot cannot be re-downloaded |
+| Global | OSM, Geofabrik Canada extract | `fclass` of bridleway, cycleway, footway, path, pedestrian, steps | Daily extracts, plus public 1 January snapshots back to 2014 (`-YYMMDD`); the April 2021 snapshot itself cannot be re-downloaded |
 | Global | gROADS v1 (SEDAC) | None stated | Canada portion sourced from OSM, so not independent |
 | Global | GRIP 2018 | None stated | Canada sourced from OSM and Atlas of Canada, so not independent |
 | National | Statistics Canada Road Network File 2020 | `Class` 28 (planned), 95 (virtual) | Now the 2025 edition (see above) |

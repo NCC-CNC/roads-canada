@@ -12,12 +12,18 @@ The workflow is:
 
 ## Setup
 
-TODO: setup and local-run instructions once the pipeline prototype exists (issue #3). The stack is Python with uv (see `docs/decisions/0002-technology-stack.md`). A good shape:
+Prerequisites: [uv](https://docs.astral.sh/uv/) and Python 3.11 or newer.
 
-- Prerequisites (tool and version).
-- A short block that installs, runs, and checks. Make its last line the
-  command CI runs, and say so.
-- Pointers to `CLAUDE.md` for anything stack-specific or slow.
+```bash
+uv sync
+uv run python src/roadless/fetch_inputs.py osm north-america/canada/nova-scotia 210101
+uv run python src/roadless/fetch_inputs.py boundary "Nova Scotia"
+uv run python src/roadless/osm_roadless.py data/raw/nova-scotia_210101.shp.zip data/raw/boundary_nova_scotia.gpkg NS_210101
+```
+
+There are no tests or lint checks yet; CI runs whatever `.github/workflows/ci.yml`
+defines. See `CLAUDE.md` for commands and `docs/design/05_osm_prototype_nova_scotia.md`
+for what to expect from the output.
 
 ## Conventions
 

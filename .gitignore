@@ -30,3 +30,8 @@ tmp/
 
 # Large third-party data (Poley et al. 2021 linear features compilation, ~20 GB)
 data/external/poley2022/canada_linear_features/
+
+# Raw downloads for the OSM prototype (re-fetched by script)
+data/raw/
+data/processed/
+.venv/

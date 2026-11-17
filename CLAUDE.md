@@ -37,8 +37,12 @@ and fallbacks in `docs/decisions/0002-technology-stack.md`.
 
 ## Commands
 
-No code exists yet. Fill this in when the pipeline prototype (issue #3) lands,
-and keep `CONTRIBUTING.md` Setup in step.
+- `uv sync`: install dependencies.
+- `uv run python src/roadless/osm_roadless.py <geofabrik.shp.zip> <boundary-file> <name>`:
+  OSM roadless-area prototype (issue #3). Fetch inputs first with
+  `uv run python src/roadless/fetch_inputs.py osm|boundary ...`. Downloads go in `data/raw/` (ignored).
+
+Keep `CONTRIBUTING.md` Setup in step.
 
 ## Repo structure
 
