@@ -2,53 +2,50 @@
 
 ## What this is
 
-{{One or two sentences: what {{PROJECT_NAME}} is and the problem it addresses.}}
+roads-canada is an effort to keep Canadian road network data and the
+roadless-area estimates derived from it current, at a fraction of the effort
+of the original research paper.
 
-It is {{a teaching tool / an internal tool / a production service / ...}}, not
-{{whatever it is explicitly not}}. The goal is to {{the outcome for the person
-using it}}.
+It is a research and planning tool, not a new road map of Canada. The goal is
+that a planner can get a current roadless-area layer and summary statistics
+without a months-long manual data assembly.
 
 ## Who it is for
 
-- {{Primary audience or user.}}
-- {{Secondary audience, if any.}}
+- Conservation planners and analysts (NCC and partners).
+- Researchers using roadless or intactness metrics.
 
-{{Any assumptions about the audience: technical level, prior knowledge, access
-requirements.}}
+## Background
+
+Poley et al. (2022) compared global (gROADS, GRIP, OSM), national (Statistics
+Canada, National Road Network) and provincial road datasets. Key findings:
+
+- Provincial datasets are the most complete, but existed for only 5 provinces
+  (BC, AB, ON, QC, NS) in 2021.
+- OSM averaged 78% of provincial road length, but about 48% in forest,
+  grassland and shrubland areas, where low-use resource roads dominate.
+- gROADS and GRIP averaged 11% to 14% and overstate roadless area.
+- No dataset has reliable creation dates or decommissioning information.
 
 ## The core idea (one screen)
 
-{{Describe the central loop or workflow in a few sentences, as if explaining it
-to someone seeing the project for the first time. What does the user do, what
-does the system do in response, what do they see change?}}
-
-## Scope layers (if applicable)
-
-{{If the project has a staged or layered scope (an MVP plus deeper layers over
-the same core), describe each layer briefly and how they share the same
-underlying engine or model. Delete this section if the project is a single
-flat scope.}}
+Automate the repeatable parts of the paper's method (download, filter to
+vehicle roads, 1 km buffer, roadless patch metrics), and add cheap ways to
+detect and ingest change, so a refresh is a scheduled run plus a short review,
+not a research project.
 
 ## MVP scope
 
-{{The smallest version that proves the core idea. Enumerate the concrete
-pieces.}}
+1. Inventory of road data sources by jurisdiction: coverage, licence, format,
+   update frequency.
+2. Scripted pipeline reproducing the paper's roadless-area calculation from
+   OSM and one provincial dataset.
+3. Documented refresh procedure and versioned outputs.
 
-1.
-2.
-3.
-
-See `docs/design/03_milestones.md` (if present) for the phased plan.
+See `docs/design/01_update_strategies.md` for the longer list of options.
 
 ## Explicit non-goals (for now)
 
-- {{What this project is deliberately not trying to be or do, and why.}}
-
-## Design principles
-
-1. {{A principle that should guide tradeoffs, and why it matters here.}}
-2. {{...}}
-
-## Open questions
-
-- {{Anything still undecided that a reader should know is open, not settled.}}
+- Manually digitizing roads at national scale.
+- Modelling road traffic or ecological effects beyond a fixed buffer.
+- Replacing provincial datasets; the aim is to use and complement them.
