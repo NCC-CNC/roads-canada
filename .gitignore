@@ -27,3 +27,6 @@ tmp/
 # Claude Code local overrides (personal, not shared)
 .claude/settings.local.json
 .claude/worktrees/
+
+# Large third-party data (Poley et al. 2021 linear features compilation, ~20 GB)
+data/external/poley2022/canada_linear_features/
