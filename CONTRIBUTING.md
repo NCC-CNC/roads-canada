@@ -12,7 +12,7 @@ The workflow is:
 
 ## Setup
 
-TODO: setup and local-run instructions once the stack is chosen. A good shape:
+TODO: setup and local-run instructions once the pipeline prototype exists (issue #3). The stack is Python with uv (see `docs/decisions/0002-technology-stack.md`). A good shape:
 
 - Prerequisites (tool and version).
 - A short block that installs, runs, and checks. Make its last line the

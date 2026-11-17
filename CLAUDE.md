@@ -31,16 +31,14 @@ Do not expand scope without a design note in `docs/design/` or an ADR in
 
 ## Stack
 
-Not yet chosen. Candidates are Python (GDAL/GeoPandas) or R, with PostGIS or
-GeoParquet for storage. Record the choice as an ADR.
+Python with uv and `pyproject.toml`; GeoPandas, Shapely and DuckDB (spatial)
+over GeoParquet files; no database server; local workstation first. Reasoning
+and fallbacks in `docs/decisions/0002-technology-stack.md`.
 
 ## Commands
 
-{{The everyday commands: run, test, lint/typecheck, build. One line each, and
-mark which ones are gates (non-zero exit blocks a merge). Say how long the
-slow ones take and which ones CI skips, so nobody runs a 20 minute suite by
-accident. Fill in once the stack is chosen; `CONTRIBUTING.md` Setup should
-match.}}
+No code exists yet. Fill this in when the pipeline prototype (issue #3) lands,
+and keep `CONTRIBUTING.md` Setup in step.
 
 ## Repo structure
 
