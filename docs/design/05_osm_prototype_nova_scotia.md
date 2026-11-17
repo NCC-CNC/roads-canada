@@ -14,7 +14,7 @@ one minute.
 ## Result against Table 4 (OSM row)
 
 | | Natural Earth 10m | geoBoundaries | Paper |
-|---|---|---|---|
+| --- | --- | --- | --- |
 | Roadless area (km2) | 10,900 | 10,872 | 11,545 |
 | Percent roadless | 19.1 | 19.0 | 20 |
 | Patches | 2,006 | 3,726 | 2,459 |
@@ -27,7 +27,7 @@ so the 2021 extract is not wholly lost, though April 2021 is unavailable.
 Same method and geoBoundaries boundary:
 
 | OSM snapshot | Roads kept | Roadless km2 | Percent | Patches |
-|---|---|---|---|---|
+| --- | --- | --- | --- | --- |
 | 2021-01-01 | 108,638 | 11,728 | 20.5 | 3,816 |
 | 2022-01-01 | 111,894 | 11,625 | 20.3 | 3,817 |
 | 2026-11 | 139,887 | 10,872 | 19.0 | 3,726 |
