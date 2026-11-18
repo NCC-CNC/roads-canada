@@ -77,8 +77,8 @@ to go province by province or reconsider the raster fallback.
 
 ## Practical notes
 
-- `fetch_inputs.py` writes the download straight to its final name and skips
-  any existing file, so an interrupted download leaves a truncated zip that is
-  later treated as complete (it happened once with Quebec). Check with
-  `unzip -tq` or delete the file and refetch. A fix (download to a temporary
-  name, then rename) is a small follow-up.
+- `fetch_inputs.py` used to write the download straight to its final name, so
+  an interrupted download left a truncated zip that was later treated as
+  complete (it happened once with Quebec). It now downloads to a `.part` file
+  and renames on success. Files fetched before that change may still be
+  truncated; check with `unzip -tq` or delete and refetch.

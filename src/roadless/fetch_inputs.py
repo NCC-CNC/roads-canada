@@ -28,7 +28,14 @@ GEOBOUNDARIES = (
 def download(url: str, dest: Path) -> Path:
     dest.parent.mkdir(parents=True, exist_ok=True)
     if not dest.exists():
-        urllib.request.urlretrieve(url, dest)
+        # Download under a temporary name and rename on success, so an
+        # interrupted download never leaves a truncated file that looks complete.
+        tmp = dest.with_name(dest.name + ".part")
+        try:
+            urllib.request.urlretrieve(url, tmp)
+            tmp.replace(dest)
+        finally:
+            tmp.unlink(missing_ok=True)
     return dest
 
 
