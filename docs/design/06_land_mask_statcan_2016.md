@@ -54,37 +54,42 @@ Only the cartographic file gives the paper's 57,534 km2, so it is the one to
 use. Downloading from StatCan: Provinces/territories, Cartographic Boundary
 File, ArcGIS (.shp), English.
 
-## Decision needed: provenance and licence
+## Provenance and licence
 
-The pipeline currently fetches its boundary from a pinned geoBoundaries commit
-(`fetch_inputs.py boundary`), which is reproducible and public. The StatCan
-file is only available here through the compilation. Statistics Canada boundary
-files are published under the Statistics Canada Open Licence (the 2016
-reference guide in the download says use is governed by it; current terms at
-<https://www.statcan.gc.ca/en/reference/licence>, not yet read). StatCan returned
-403 to automated download earlier. Before making this the default:
+Decision recorded in `docs/decisions/0003-statcan-boundary-default.md`: the
+StatCan file is the default, geoBoundaries the fallback.
 
-1. Read the current Statistics Canada Open Licence terms. The boundary files
-   page states no licence and the download has no licence file; the only
-   statement is in the 2016 reference guide ("Use of this publication is
-   governed by the Statistics Canada Open Licence Agreement"). Recorded in
-   `02_data_sources.md` as unverified. Do not commit the file to the repo until
-   confirmed.
-2. The manual download from StatCan (Provinces/territories, Cartographic
-   Boundary File, ArcGIS, English) is byte-identical to the copy in the Poley
-   compilation (checked on the .shp, .dbf, .shx and .prj files), so either
-   source works. Document it as a manual step; do not work around the 403.
-   Cite as Statistics Canada, Boundary Files, 2016 Census, Catalogue no.
-   92-160-X.
-3. If it becomes the default, record it in an ADR and keep the geoBoundaries
-   path as a fallback.
+Licence (checked 2026-11-18 at <https://www.statcan.gc.ca/en/reference/licence>):
+the Statistics Canada Open Licence grants a worldwide, royalty-free,
+non-exclusive right to use, reproduce, publish and freely distribute the
+Information (data files and maps included), on conditions: reproduce it
+accurately, do not misrepresent it or its source, do not link it with other
+data to identify individuals or organizations, and do not use Statistics
+Canada's name or logos without authorization. The boundary files page and the
+download carry no licence text; the licence applies through the 2016 reference
+guide ("Use of this publication is governed by the Statistics Canada Open
+Licence Agreement"). A third-party mirror of the guide lists OGL-Canada 2.0
+instead; both are permissive, but only the first is from Statistics Canada.
+
+Attribution to use:
+
+- Redistributing the file: "Source: Statistics Canada, Boundary Files, 2016
+  Census, Catalogue no. 92-160-X. Reproduced and distributed on an 'as is'
+  basis with the permission of Statistics Canada."
+- Outputs derived from it (roadless-area results): "Adapted from Statistics
+  Canada, Boundary Files, 2016 Census, Catalogue no. 92-160-X. This does not
+  constitute an endorsement by Statistics Canada of this product."
+
+Handling: the file stays a manual download into `data/raw/` (StatCan returns
+403 to automated clients; do not work around it) and is not committed, because
+nothing needs it in the repo. The licence would permit committing it with the
+first attribution.
 
 ## Next steps
 
 - BC, AB, ON and QC are being run with this boundary (see the province
   results note) to check the pattern holds beyond Nova Scotia.
-- Add a boundary argument convention to `osm_roadless.py` documentation: the
-  script takes any boundary file, so a province must be extracted first
-  (filter `PRUID`; BC 59, AB 48, ON 35, QC 24).
+- Done: `fetch_inputs.py boundary <province>` extracts the province from the
+  StatCan zip by `PRENAME` (ADR 0003).
 - Revisit whether a minimum patch size is still wanted (deferred in note 05);
   the sliver problem largely disappears with this mask.
