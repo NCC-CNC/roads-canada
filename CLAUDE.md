@@ -42,6 +42,8 @@ and fallbacks in `docs/decisions/0002-technology-stack.md`.
 - `uv run python src/roadless/osm_roadless.py <geofabrik.shp.zip> <boundary-file> <name>`:
   OSM roadless-area prototype (issue #3). Fetch inputs first with
   `uv run python src/roadless/fetch_inputs.py osm|boundary ...`. Downloads go in `data/raw/` (ignored).
+- `uv run python src/roadless/osm_change.py <old.shp.zip> <new.shp.zip> <boundary-file> <name>`:
+  roadless-area change between two OSM snapshots (issue #5).
 
 Keep `CONTRIBUTING.md` Setup in step.
 
