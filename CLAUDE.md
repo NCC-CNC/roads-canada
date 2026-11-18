@@ -56,6 +56,8 @@ than trusting this section.}}
 
 - Branch from `main`; one short-lived branch per change. Open a pull request
   into `main`; CI must pass before merge.
+- One pull request per working session unless the user says otherwise; put
+  further work in the same branch. Ask before opening a second PR.
 - Conventional Commits (for example `feat: ...`, `fix: ...`, `chore: ...`,
   `docs: ...`).
 - No em dashes in code, comments, docs, commit messages, or user-facing text.
