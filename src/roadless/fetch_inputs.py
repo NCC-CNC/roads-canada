@@ -3,6 +3,7 @@
 Usage:
   uv run python src/roadless/fetch_inputs.py osm <region-path> [YYMMDD|latest]
   uv run python src/roadless/fetch_inputs.py boundary <province name>
+  uv run python src/roadless/fetch_inputs.py pbf <region-path> <YYMMDD>
 
 Examples:
   fetch_inputs.py osm north-america/canada/nova-scotia 210101
@@ -50,6 +51,15 @@ def fetch_osm(region: str, stamp: str = "latest") -> Path:
     return download(url, RAW / f"{name}_{stamp}.shp.zip")
 
 
+def fetch_pbf(region: str, stamp: str) -> Path:
+    """Dated regional .osm.pbf (base extract for replication-diff geometry).
+
+    Geofabrik's `-latest` name is a redirect page, so pass an explicit date.
+    """
+    name = region.rsplit("/", 1)[-1]
+    return download(f"{GEOFABRIK}/{region}-{stamp}.osm.pbf", RAW / f"{name}_{stamp}.osm.pbf")
+
+
 STATCAN_ZIP = RAW / "lpr_000b16a_e.zip"
 
 
@@ -81,4 +91,4 @@ def fetch_boundary(province: str) -> Path:
 
 if __name__ == "__main__":
     kind, *rest = sys.argv[1:]
-    print({"osm": fetch_osm, "boundary": fetch_boundary}[kind](*rest))
+    print({"osm": fetch_osm, "boundary": fetch_boundary, "pbf": fetch_pbf}[kind](*rest))

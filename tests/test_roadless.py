@@ -34,3 +34,18 @@ def test_no_roads_leaves_all_land():
     patches = roadless_patches(roads, land)
     assert len(patches) == 1
     assert abs(patches["area_km2"].sum() - 25.0) < 1e-6
+
+
+def test_verify_zip_rejects_truncated(tmp_path):
+    import pytest
+    from run_regions import verify_zip
+
+    good = tmp_path / "good.zip"
+    import zipfile
+    with zipfile.ZipFile(good, "w") as z:
+        z.writestr("a.txt", "x" * 1000)
+    verify_zip(good)
+    bad = tmp_path / "bad.zip"
+    bad.write_bytes(good.read_bytes()[:-30])
+    with pytest.raises(Exception):
+        verify_zip(bad)
