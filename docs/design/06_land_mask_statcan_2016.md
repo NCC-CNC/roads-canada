@@ -64,10 +64,18 @@ reference guide in the download says use is governed by it; current terms at
 https://www.statcan.gc.ca/en/reference/licence, not yet read). StatCan returned
 403 to automated download earlier. Before making this the default:
 
-1. Confirm the licence on the Statistics Canada boundary files page and record
-   it in `02_data_sources.md`.
-2. Decide whether to fetch it from StatCan by hand (a documented manual step)
-   or reference the compilation path. Do not work around the 403.
+1. Read the current Statistics Canada Open Licence terms. The boundary files
+   page states no licence and the download has no licence file; the only
+   statement is in the 2016 reference guide ("Use of this publication is
+   governed by the Statistics Canada Open Licence Agreement"). Recorded in
+   `02_data_sources.md` as unverified. Do not commit the file to the repo until
+   confirmed.
+2. The manual download from StatCan (Provinces/territories, Cartographic
+   Boundary File, ArcGIS, English) is byte-identical to the copy in the Poley
+   compilation (checked on the .shp, .dbf, .shx and .prj files), so either
+   source works. Document it as a manual step; do not work around the 403.
+   Cite as Statistics Canada, Boundary Files, 2016 Census, Catalogue no.
+   92-160-X.
 3. If it becomes the default, record it in an ADR and keep the geoBoundaries
    path as a fallback.
 
