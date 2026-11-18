@@ -17,6 +17,7 @@ Prerequisites: [uv](https://docs.astral.sh/uv/) and Python 3.11 or newer.
 ```bash
 uv sync
 uv run python src/roadless/fetch_inputs.py osm north-america/canada/nova-scotia 210101
+# Needs lpr_000b16a_e.zip in data/raw/ (StatCan 2016 cartographic boundary, manual download; see ADR 0003)
 uv run python src/roadless/fetch_inputs.py boundary "Nova Scotia"
 uv run python src/roadless/osm_roadless.py data/raw/nova-scotia_210101.shp.zip data/raw/boundary_nova_scotia.gpkg NS_210101
 ```

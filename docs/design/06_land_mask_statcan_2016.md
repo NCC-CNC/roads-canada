@@ -54,7 +54,9 @@ Only the cartographic file gives the paper's 57,534 km2, so it is the one to
 use. Downloading from StatCan: Provinces/territories, Cartographic Boundary
 File, ArcGIS (.shp), English.
 
-## Decision needed: provenance and licence
+## Provenance and licence
+
+Decision recorded in `docs/decisions/0003-statcan-boundary-default.md`: the StatCan file is now the default, geoBoundaries the fallback. The licence check below is still open.
 
 The pipeline currently fetches its boundary from a pinned geoBoundaries commit
 (`fetch_inputs.py boundary`), which is reproducible and public. The StatCan
@@ -83,8 +85,7 @@ reference guide in the download says use is governed by it; current terms at
 
 - BC, AB, ON and QC are being run with this boundary (see the province
   results note) to check the pattern holds beyond Nova Scotia.
-- Add a boundary argument convention to `osm_roadless.py` documentation: the
-  script takes any boundary file, so a province must be extracted first
-  (filter `PRUID`; BC 59, AB 48, ON 35, QC 24).
+- Done: `fetch_inputs.py boundary <province>` extracts the province from the
+  StatCan zip by `PRENAME` (ADR 0003).
 - Revisit whether a minimum patch size is still wanted (deferred in note 05);
   the sliver problem largely disappears with this mask.

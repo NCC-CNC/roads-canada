@@ -9,8 +9,13 @@ Examples:
   fetch_inputs.py boundary "Nova Scotia"
 
 Geofabrik keeps public snapshots dated 1 January each year back to 2014.
-Boundaries come from geoBoundaries CAN ADM1 (StatCan-derived, pinned commit);
-the national file is about 650 MB, so only the requested province is kept.
+Boundaries: the default is the Statistics Canada 2016 Cartographic Boundary
+File (lpr_000b16a_e.zip), which reproduces the paper's land areas (ADR 0003).
+Download it manually from Statistics Canada (Boundary Files, 2016 Census,
+Provinces/territories, Cartographic Boundary File, ArcGIS, English) and place
+the zip in data/raw/. If it is absent, the fallback is geoBoundaries CAN ADM1
+(pinned commit; about 650 MB national file, only the province is kept), which
+leaves coastal slivers and gives more patches than the paper.
 """
 import os
 import sys
@@ -38,13 +43,25 @@ def fetch_osm(region: str, stamp: str = "latest") -> Path:
     return download(url, RAW / f"{name}_{stamp}.shp.zip")
 
 
+STATCAN_ZIP = RAW / "lpr_000b16a_e.zip"
+
+
 def fetch_boundary(province: str) -> Path:
-    os.environ.setdefault("OGR_GEOJSON_MAX_OBJ_SIZE", "0")
     import geopandas as gpd
 
     out = RAW / f"boundary_{province.lower().replace(' ', '_')}.gpkg"
     if out.exists():
         return out
+    if STATCAN_ZIP.exists():
+        gdf = gpd.read_file(f"zip://{STATCAN_ZIP}!lpr_000b16a_e.shp", engine="pyogrio")
+        sel = gdf[gdf["PRENAME"] == province]
+        if sel.empty:
+            raise SystemExit(f"No province {province!r}; have {gdf['PRENAME'].tolist()}")
+        sel.to_file(out, driver="GPKG")
+        return out
+    print(f"{STATCAN_ZIP} not found; falling back to geoBoundaries (not paper-equivalent)",
+          file=sys.stderr)
+    os.environ.setdefault("OGR_GEOJSON_MAX_OBJ_SIZE", "0")
     national = download(GEOBOUNDARIES, RAW / "gb_can_adm1.geojson")
     gdf = gpd.read_file(national)
     sel = gdf[gdf["shapeName"] == province]
