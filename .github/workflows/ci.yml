@@ -64,8 +64,18 @@ jobs:
   #         key: cache-${{ runner.os }}-${{ hashFiles('LOCKFILE') }}
   #     - run: YOUR_BUILD_AND_TEST_COMMAND
 
+  test:
+    needs: changes
+    if: needs.changes.outputs.code == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: astral-sh/setup-uv@v6
+      - run: uv sync --locked
+      - run: uv run pytest -q
+
   checks:
-    needs: [changes, repo-hygiene]
+    needs: [changes, repo-hygiene, test]
     if: always()
     runs-on: ubuntu-latest
     steps:

@@ -21,8 +21,8 @@ uv run python src/roadless/fetch_inputs.py boundary "Nova Scotia"
 uv run python src/roadless/osm_roadless.py data/raw/nova-scotia_210101.shp.zip data/raw/boundary_nova_scotia.gpkg NS_210101
 ```
 
-There are no tests or lint checks yet; CI runs whatever `.github/workflows/ci.yml`
-defines. See `CLAUDE.md` for commands and `docs/design/05_osm_prototype_nova_scotia.md`
+Run the tests with `uv run pytest`. There is no lint step yet; CI runs whatever
+`.github/workflows/ci.yml` defines. See `CLAUDE.md` for commands and `docs/design/05_osm_prototype_nova_scotia.md`
 for what to expect from the output.
 
 ## Conventions
