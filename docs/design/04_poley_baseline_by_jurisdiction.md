@@ -105,8 +105,8 @@ NRN for NT).
 - Why NRN in NT and NU does not match the paper's NRN totals.
 - Whether the BC and ON shortfalls against the paper come from the merge or
   from a different download of the source.
-- Table 4 figures are still unconfirmed against the page image. Text
-  extraction dropped digits in three cells (AB OSM and ABHFP roadless area,
-  ON GRIP roadless area).
+- Three Table 4 cells (AB OSM and ABHFP roadless area, ON GRIP roadless area)
+  are missing leading digits in the PDF itself. Reconstructed values are in
+  `07_osm_prototype_four_provinces.md`.
 - Class breakdown by jurisdiction for all sources was collected only for the
   top 25 source and class pairs per province.
