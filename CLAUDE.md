@@ -38,6 +38,7 @@ and fallbacks in `docs/decisions/0002-technology-stack.md`.
 ## Commands
 
 - `uv sync`: install dependencies.
+- `uv run pytest`: run the tests (synthetic roadless-area check).
 - `uv run python src/roadless/osm_roadless.py <geofabrik.shp.zip> <boundary-file> <name>`:
   OSM roadless-area prototype (issue #3). Fetch inputs first with
   `uv run python src/roadless/fetch_inputs.py osm|boundary ...`. Downloads go in `data/raw/` (ignored).
