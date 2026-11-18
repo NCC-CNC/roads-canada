@@ -29,6 +29,8 @@ uv run python src/roadless/fetch_inputs.py pbf north-america/canada/new-brunswic
 uv run python src/roadless/osm_diff_probe.py north-america/canada/new-brunswick 4946 4975 data/processed/210101/new-brunswick/patches.parquet data/raw/new-brunswick_261117.osm.pbf
 # Several provinces, resumable (skips finished ones; --force to redo)
 uv run python src/roadless/run_regions.py 210101 "Nova Scotia" Yukon
+# Same, from the National Road Network (downloads the current edition; results in data/processed/nrn/)
+uv run python src/roadless/run_regions.py nrn "Nova Scotia" Yukon
 ```
 
 Run the tests with `uv run pytest`. There is no lint step yet; CI runs whatever

@@ -46,6 +46,7 @@ and fallbacks in `docs/decisions/0002-technology-stack.md`.
   roadless-area change between two OSM snapshots (issue #5).
 - `uv run python src/roadless/run_regions.py <YYMMDD> <province>...|all [--force]`:
   resumable multi-province run; results in `data/processed/<YYMMDD>/<slug>/`, failures in `errors.log`.
+  Use `nrn` in place of `<YYMMDD>` to run the National Road Network instead of OSM (issue #4).
 
 Keep `CONTRIBUTING.md` Setup in step.
 

@@ -4,6 +4,7 @@ Usage:
   uv run python src/roadless/fetch_inputs.py osm <region-path> [YYMMDD|latest]
   uv run python src/roadless/fetch_inputs.py boundary <province name>
   uv run python src/roadless/fetch_inputs.py pbf <region-path> <YYMMDD>
+  uv run python src/roadless/fetch_inputs.py nrn <two-letter code, e.g. ns>
 
 Examples:
   fetch_inputs.py osm north-america/canada/nova-scotia 210101
@@ -21,6 +22,7 @@ leaves coastal slivers and gives more patches than the paper.
 import os
 import sys
 import urllib.request
+import zipfile
 from pathlib import Path
 
 RAW = Path("data/raw")
@@ -60,6 +62,26 @@ def fetch_pbf(region: str, stamp: str) -> Path:
     return download(f"{GEOFABRIK}/{region}-{stamp}.osm.pbf", RAW / f"{name}_{stamp}.osm.pbf")
 
 
+NRN_URL = "https://geo.statcan.gc.ca/nrn_rrn/{p}/nrn_rrn_{p}_GPKG.zip"
+
+
+def fetch_nrn(code: str) -> Path:
+    """National Road Network GeoPackage (English) for one province or territory.
+
+    Downloads the Statistics Canada zip to data/raw/nrn/ and extracts the
+    English .gpkg next to it; returns the .gpkg path. Current edition only:
+    StatCan publishes no dated archive at this URL.
+    """
+    code = code.lower()
+    zip_path = download(NRN_URL.format(p=code), RAW / "nrn" / f"nrn_rrn_{code}_GPKG.zip")
+    found = sorted((RAW / "nrn" / code).rglob("*_en.gpkg"))
+    if found:
+        return found[-1]
+    with zipfile.ZipFile(zip_path) as z:
+        z.extractall(RAW / "nrn" / code, [n for n in z.namelist() if n.endswith("_en.gpkg")])
+    return sorted((RAW / "nrn" / code).rglob("*_en.gpkg"))[-1]
+
+
 STATCAN_ZIP = RAW / "lpr_000b16a_e.zip"
 
 
@@ -91,4 +113,4 @@ def fetch_boundary(province: str) -> Path:
 
 if __name__ == "__main__":
     kind, *rest = sys.argv[1:]
-    print({"osm": fetch_osm, "boundary": fetch_boundary, "pbf": fetch_pbf}[kind](*rest))
+    print({"osm": fetch_osm, "boundary": fetch_boundary, "pbf": fetch_pbf, "nrn": fetch_nrn}[kind](*rest))

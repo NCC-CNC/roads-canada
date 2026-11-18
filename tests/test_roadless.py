@@ -49,3 +49,22 @@ def test_verify_zip_rejects_truncated(tmp_path):
     bad.write_bytes(good.read_bytes()[:-30])
     with pytest.raises(Exception):
         verify_zip(bad)
+
+
+def test_nrn_loader_filters_road_class(tmp_path):
+    from nrn_roadless import load_roads
+
+    gdf = gpd.GeoDataFrame(
+        {
+            "NID": ["a", "b"], "ROADCLASS": ["Collector", "Winter"],
+            "PAVSTATUS": ["Paved", "Unknown"], "CLOSING": ["Unknown", "Unknown"],
+            "REVDATE": ["20200101", "20200101"],
+        },
+        geometry=[LineString([(0, 0), (1000, 0)]), LineString([(0, 500), (1000, 500)])],
+        crs=CRS,
+    )
+    path = tmp_path / "nrn.gpkg"
+    gdf.to_file(path, layer="NRN_XX_1_0_ROADSEG", driver="GPKG")
+
+    assert len(load_roads(path)) == 2  # default keeps every class, as the paper did
+    assert list(load_roads(path, excluded=["Winter"])["ROADCLASS"]) == ["Collector"]
