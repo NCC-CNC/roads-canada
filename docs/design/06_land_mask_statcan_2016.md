@@ -61,7 +61,7 @@ The pipeline currently fetches its boundary from a pinned geoBoundaries commit
 file is only available here through the compilation. Statistics Canada boundary
 files are published under the Statistics Canada Open Licence (the 2016
 reference guide in the download says use is governed by it; current terms at
-https://www.statcan.gc.ca/en/reference/licence, not yet read). StatCan returned
+<https://www.statcan.gc.ca/en/reference/licence>, not yet read). StatCan returned
 403 to automated download earlier. Before making this the default:
 
 1. Read the current Statistics Canada Open Licence terms. The boundary files
