@@ -77,6 +77,13 @@ key in the `actions/cache` step of your CI job.
   protection, auto-merge, labels) that a template cannot carry over on its
   own.
 
+## Data attribution
+
+Roadless-area results use the Statistics Canada 2016 Cartographic Boundary
+File as the land mask. Adapted from Statistics Canada, Boundary Files, 2016
+Census, Catalogue no. 92-160-X. This does not constitute an endorsement by
+Statistics Canada of this product.
+
 ## License
 
 GNU General Public License v3.0 (inherited from the project template; to be confirmed).

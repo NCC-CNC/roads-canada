@@ -22,8 +22,8 @@ patch counts within about 5% (design notes 06 and 07).
   clients). `fetch_inputs.py boundary <province>` extracts the province by
   name (`PRENAME`) into a GeoPackage.
 - geoBoundaries stays as a fallback when the zip is absent, with a warning.
-- The file is not committed to the repo until the Statistics Canada Open
-  Licence terms are confirmed (open item in design note 06).
+- The file is not committed to the repo (nothing needs it there). Licence
+  confirmed 2026-11-18; see design note 06 for terms and attribution.
 
 ## Consequences
 
