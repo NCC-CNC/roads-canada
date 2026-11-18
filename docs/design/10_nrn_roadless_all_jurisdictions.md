@@ -1,12 +1,12 @@
-# National Road Network roadless areas, all 13 jurisdictions (issue #4)
+# National Road Network and BC Digital Road Atlas roadless areas (issue #4)
 
 Issue #4 asked for one provincial road dataset through the same pipeline, with
 a vehicle-road filter, compared with OSM and the paper. I chose the National
 Road Network (NRN, Statistics Canada) because it covers every province and
 territory in one schema, so it also tests the harmonization pattern 13 times
-and addresses the NT and NU discrepancy in note 04. Provincial datasets with
-resource roads (BC DRA, Alberta Human Footprint) are the next step and are not
-done here.
+and addresses the NT and NU discrepancy in note 04. The BC Digital Road Atlas (a provincial dataset with
+resource roads) is the second dataset, in the last section. Alberta Human
+Footprint is not done.
 
 Run: `run_regions.py nrn all`, current NRN GeoPackages (English) from
 `geo.statcan.gc.ca/nrn_rrn/`, paper method (1 km buffer, StatCan 2016 land
@@ -67,17 +67,56 @@ unchecked. Elsewhere Winter roads are small (Alberta 40 segments, Ontario 234).
   no comparison with the paper was made beyond NS (note 06) and the NT and NU
   road length above. That comparison needs the paper's tables entered by hand.
 
+## BC Digital Road Atlas
+
+`bcdra_roadless.py [--strict]`, DRA Master Partially-Attributed Roads, full
+province geodatabase (258 MB) downloaded anonymously from the BC object store,
+edition stamped 2026-10-30. Licence is "Access Only", free of charge, not an
+open licence (note 02); not resolved. The layer has 1,880,540 segments and
+756,161 km. The attribute names differ from the catalogue: the class field is
+`RD_CLASS`, with `FEAT_TYPE` and `RD_SURFACE`.
+
+Default filter is the paper's DRA exclusions mapped to `RD_CLASS`: ferry,
+driveway, pedestrian, proposed, runway, water. `--strict` also drops trail
+(36,806 km) and `RD_SURFACE` decommissioned or rehabilitated.
+
+| BC source | Road km | Roadless km2 | Roadless % | Patches |
+| --- | --- | --- | --- | --- |
+| NRN 14.0 (2018) | 91,219 | 823,011 | 89.7 | 3,748 |
+| OSM 2021 | not recorded | 746,876 | 81.4 | 5,679 |
+| DRA, paper exclusions | 739,084 | 494,471 | 53.9 | 11,358 |
+| DRA, strict | 702,313 | 502,908 | 54.8 | 11,481 |
+
+- The DRA total (739,084 km) is 6% under the paper's DRA figure for BC (788,946
+  km), a newer edition and different exclusions being possible causes (unchecked).
+- BC roadless area is 28 points lower with the DRA than with OSM and 36 lower
+  than with the NRN. OSM and the NRN both miss most BC resource roads, so
+  their BC figures should not be used. The DRA is the only one of the three
+  that is plausibly complete, but it has not been checked against imagery, and
+  its roads include old and overgrown ones (overgrown is 44,613 km and stays
+  in both variants).
+- The filter choice matters little here: dropping trails and decommissioned
+  roads adds 0.9 points. Class `unclassified` (304,854 km) is kept; it is not
+  an exclusion in the paper.
+- Run time is about 15 minutes per variant, because of the 1.8 million
+  segments. This is the first input where tiling or a simplified buffer may be
+  worth considering.
+- The paper's BC roadless area is not in our notes, so no comparison with it.
+
 ## Harmonization pattern for further datasets
 
 A new dataset needs only a loader: read the road layer, drop non-vehicle
 classes with an explicit documented list, reproject to EPSG:3347, return a
 GeoDataFrame. `roadless_patches`, `summarize`, the boundary and the resumable
 runner are shared. `nrn_roadless.py` (about 30 lines) is the template; the
-runner selects the source by label (`nrn` or a snapshot date). The loader test
+runner selects the source by label (`nrn` or a snapshot date). The DRA loader
+(`bcdra_roadless.py`) follows the same shape with its own filter and a
+standalone entry point. The loader test
 is in `tests/test_roadless.py`.
 
 ## Limits
 
+- The DRA is not archived either; record the edition with results.
 - No NRN edition is archived at the download URL, so a rerun gets whatever is
   current; record the edition (`NRN_<prov>_<ed>_GPKG_en.gpkg`) with results.
 - The NRN licence (OGL-Canada per the catalogue) was not read in full.

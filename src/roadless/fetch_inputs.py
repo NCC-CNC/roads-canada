@@ -5,6 +5,7 @@ Usage:
   uv run python src/roadless/fetch_inputs.py boundary <province name>
   uv run python src/roadless/fetch_inputs.py pbf <region-path> <YYMMDD>
   uv run python src/roadless/fetch_inputs.py nrn <two-letter code, e.g. ns>
+  uv run python src/roadless/fetch_inputs.py bcdra
 
 Examples:
   fetch_inputs.py osm north-america/canada/nova-scotia 210101
@@ -82,6 +83,26 @@ def fetch_nrn(code: str) -> Path:
     return sorted((RAW / "nrn" / code).rglob("*_en.gpkg"))[-1]
 
 
+BCDRA_URL = "https://nrs.objectstore.gov.bc.ca/itqlyp/DRA_Public/dgtl_road_atlas.gdb.zip"
+
+
+def fetch_bcdra() -> Path:
+    """BC Digital Road Atlas (full province geodatabase, about 258 MB).
+
+    The zip holds the geodatabase files flat, so they are extracted into a
+    `dra.gdb` folder GDAL can open. Current edition only (monthly updates).
+    """
+    d = RAW / "bc_dra"
+    zip_path = download(BCDRA_URL, d / "dgtl_road_atlas.gdb.zip")
+    gdb = d / "dra.gdb"
+    if not gdb.exists():
+        tmp = d / "dra.gdb.part"
+        with zipfile.ZipFile(zip_path) as z:
+            z.extractall(tmp)
+        tmp.replace(gdb)
+    return gdb
+
+
 STATCAN_ZIP = RAW / "lpr_000b16a_e.zip"
 
 
@@ -113,4 +134,4 @@ def fetch_boundary(province: str) -> Path:
 
 if __name__ == "__main__":
     kind, *rest = sys.argv[1:]
-    print({"osm": fetch_osm, "boundary": fetch_boundary, "pbf": fetch_pbf, "nrn": fetch_nrn}[kind](*rest))
+    print({"osm": fetch_osm, "boundary": fetch_boundary, "pbf": fetch_pbf, "nrn": fetch_nrn, "bcdra": fetch_bcdra}[kind](*rest))

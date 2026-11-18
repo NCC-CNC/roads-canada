@@ -68,3 +68,21 @@ def test_nrn_loader_filters_road_class(tmp_path):
 
     assert len(load_roads(path)) == 2  # default keeps every class, as the paper did
     assert list(load_roads(path, excluded=["Winter"])["ROADCLASS"]) == ["Collector"]
+
+
+def test_bcdra_loader_filters(tmp_path):
+    from bcdra_roadless import LAYER, load_roads
+
+    classes = ["resource", "ferry", "driveway", "trail", "local"]
+    surfaces = ["rough", "unknown", "paved", "loose", "decommissioned"]
+    gdf = gpd.GeoDataFrame(
+        {"ID": range(5), "RD_CLASS": classes, "FEAT_TYPE": ["Road"] * 5, "RD_SURFACE": surfaces},
+        geometry=[LineString([(0, i * 100), (1000, i * 100)]) for i in range(5)],
+        crs=CRS,
+    )
+    path = tmp_path / "dra.gpkg"
+    gdf.to_file(path, layer=LAYER, driver="GPKG")
+
+    # Paper exclusions drop ferry and driveway only; strict also drops trail and decommissioned.
+    assert sorted(load_roads(path)["RD_CLASS"]) == ["local", "resource", "trail"]
+    assert sorted(load_roads(path, strict=True)["RD_CLASS"]) == ["resource"]
