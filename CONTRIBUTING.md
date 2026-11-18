@@ -22,6 +22,8 @@ uv run python src/roadless/fetch_inputs.py boundary "Nova Scotia"
 uv run python src/roadless/osm_roadless.py data/raw/nova-scotia_210101.shp.zip data/raw/boundary_nova_scotia.gpkg NS_210101
 # Change between two snapshots (fetch the 220101 file the same way)
 uv run python src/roadless/osm_change.py data/raw/ns_210101.shp.zip data/raw/ns_220101.shp.zip data/raw/boundary_nova_scotia.gpkg NS_2021_2022
+# Several provinces, resumable (skips finished ones; --force to redo)
+uv run python src/roadless/run_regions.py 210101 "Nova Scotia" Yukon
 ```
 
 Run the tests with `uv run pytest`. There is no lint step yet; CI runs whatever

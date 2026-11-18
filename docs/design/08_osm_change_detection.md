@@ -62,3 +62,17 @@ which the shortcut ignores; this was not checked directly.
 Only one region and one year pair. History extracts and replication diffs were
 assessed from documentation, not run. Removed-road effect on the +6 km2 gap not
 isolated.
+
+## Scaling to other provinces
+
+`src/roadless/run_regions.py` runs the baseline for many provinces without one
+failure costing the rest: it verifies each zip before computing, writes a
+`stats.json` done marker last, skips finished provinces on rerun, and logs
+failures to `errors.log` while continuing. Checked on Nova Scotia (29 s, 20.5%
+roadless, matching the earlier run), Nunavut (13 s) and Yukon (3 s); a missing
+snapshot (404) logged an error for both provinces and exited 1.
+
+Tested and rejected: a coarser buffer (`quad_segs` 4 or 2) was not faster on
+Nova Scotia and overstated roadless area by 0.7% and 2.4%. Not yet built:
+tiling, which is the next step if BC, ON or QC prove too slow or memory-heavy.
+Their runtimes are untested through this runner.

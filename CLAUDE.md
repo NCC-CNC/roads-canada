@@ -44,6 +44,8 @@ and fallbacks in `docs/decisions/0002-technology-stack.md`.
   `uv run python src/roadless/fetch_inputs.py osm|boundary ...`. Downloads go in `data/raw/` (ignored).
 - `uv run python src/roadless/osm_change.py <old.shp.zip> <new.shp.zip> <boundary-file> <name>`:
   roadless-area change between two OSM snapshots (issue #5).
+- `uv run python src/roadless/run_regions.py <YYMMDD> <province>...|all [--force]`:
+  resumable multi-province run; results in `data/processed/<YYMMDD>/<slug>/`, failures in `errors.log`.
 
 Keep `CONTRIBUTING.md` Setup in step.
 
