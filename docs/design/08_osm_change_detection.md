@@ -36,14 +36,14 @@ about 80 seconds.
 
 Incremental route: buffer only the added roads and subtract them from the old
 patches. Result 11,702 km2 against 11,696 km2 from the full rebuild, a
-difference of +6 km2 (0.05%). The gap is most plausibly the 404 removed ways,
-which the shortcut ignores; this was not checked directly.
+difference of +6 km2 (0.05%). See "Three regions" below for what drives the gap.
 
 ## Findings
 
-- Change is small and mostly in already-roaded land: about 95% of added road
-  length is within 1 km of existing roads. Remote-area loss is a handful of
-  ways, so a refresh should report lost roadless polygons, not just totals.
+- Change is small, and where it falls varies by region (see below). In Nova
+  Scotia about 95% of added road length is within 1 km of existing roads; in
+  NB and NL a much larger share is in remote land. A refresh should report lost
+  roadless polygons, not just totals.
 - The incremental shortcut reproduces the full rebuild closely, so a refresh
   only needs to process new `osm_id`s (and removals, to recover area).
 - Net change is sensitive to deletions and to OSM mapping effort, not only to
@@ -76,3 +76,25 @@ Tested and rejected: a coarser buffer (`quad_segs` 4 or 2) was not faster on
 Nova Scotia and overstated roadless area by 0.7% and 2.4%. Not yet built:
 tiling, which is the next step if BC, ON or QC prove too slow or memory-heavy.
 Their runtimes are untested through this runner.
+
+## Three regions, 2021-01-01 vs 2022-01-01
+
+| | Nova Scotia | New Brunswick | Newfoundland and Labrador |
+| --- | --- | --- | --- |
+| Ways added / removed | 3,660 / 404 | 5,592 / 467 | 3,016 / 192 |
+| Added length (km) | 794 | 1,226 | 529 |
+| Added length inside old roadless land | 41 km (5.2%) | 270 km (22.0%) | 188 km (35.5%) |
+| Added ways touching a patch of 100 km2 or more | 15 | 91 | 80 |
+| Roadless change (km2) | -104 | -533 | -284 |
+| Roadless land lost, polygons / km2 | 454 / 110 | 662 / 534 | 435 / 305 |
+| Incremental minus full rebuild (km2) | +6 | +35 | -10 |
+
+The incremental gap has both signs, so one cause does not explain it. Removed
+ways, which the shortcut ignores, push the incremental result below the full
+rebuild (NL, -10). Ways that kept their `osm_id` but were extended or
+re-routed are not flagged as added, which pushes it above (NS, NB). The earlier
+statement that removals explain the Nova Scotia gap was wrong in sign and is
+withdrawn. Both effects are small (at most 0.1% of roadless area here). A
+refresh should also flag changed ways, which needs object versions or
+timestamps (history extract or replication diffs), not the shapefile alone.
+Neither cause was isolated by direct test.
