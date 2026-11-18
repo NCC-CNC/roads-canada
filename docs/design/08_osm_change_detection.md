@@ -52,9 +52,10 @@ difference of +6 km2 (0.05%). See "Three regions" below for what drives the gap.
 ## Recommendation
 
 1. Use dated snapshots for the first change layer; they need no new tooling.
-2. For a rolling refresh, use Geofabrik's per-region daily diffs, resolving
-   geometry against a base extract (see the replication test below). Compare
-   with a history extract if exact edit dates are needed.
+2. For a rolling refresh, use Geofabrik's per-region daily diffs plus a
+   current regional extract for geometry (tested, see below). Only new ways
+   need buffering; edits can be skipped. Deleted roads need an older extract.
+   A history extract is only needed for exact edit dates.
 3. Validate flagged remote additions against imagery or the NRN before
    reporting them as new roads.
 
@@ -134,5 +135,30 @@ Findings:
   not a change estimate.
 - Retention is limited, so a rolling refresh must run at least every few
   months, or start from a fresh extract each time.
-- Not tested: planet minutely or hourly diffs, applying diffs to a base extract
-  (`osmium apply-changes`), other regions.
+- Not tested: planet minutely or hourly diffs, other regions.
+
+### With a base extract (pyosmium)
+
+The probe takes an optional base `.osm.pbf` (here the 2026-11-17 New Brunswick
+extract, 66 MB, fetched with `fetch_inputs.py pbf`). The diffs say which ways
+changed and when; the extract supplies geometry through a node location index.
+`osmium` (pyosmium 4.3) is now a project dependency. Run time 30 s.
+
+| Measure | Result |
+| --- | --- |
+| Changed road ways resolved | 1,455 of 1,456 |
+| Created: ways / length / inside 2021 roadless land | 552 / 182 km / 22 km (12.2%) |
+| Modified: ways / length / inside 2021 roadless land | 903 / 768 km / 18 km (2.3%) |
+
+- Resolution rises from 68% to about 100% for created ways and from 8% to 100%
+  for modified ways, so a base extract is enough; no full history is needed.
+- Edits touch four times the road length of new ways (768 vs 182 km) but almost
+  none of it is remote (2.3%), so edits can be ignored for roadless change. New
+  ways are where remote change shows up.
+- The extract is current (2026-11-17), so a way created and then deleted inside
+  the window is absent from it, and a way's geometry is its latest, not its
+  state on the day it changed.
+- Still unresolved: deleted roads. Delete records carry no tags or geometry,
+  so removed road length needs an older extract to look the ids up in.
+- Geofabrik's `-latest` file name is a 307 redirect page. A plain `curl -sf`
+  saved the 289-byte redirect body as the file; use `-L` or a dated name.

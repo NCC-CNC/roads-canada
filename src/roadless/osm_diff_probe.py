@@ -4,8 +4,11 @@ Downloads a run of daily .osc.gz diffs for one region, keeps highway ways with
 the same class exclusions as the roadless method, and reports created, modified
 and deleted ways. Geometry comes only from nodes present in the diffs, so the
 report also says how many road ways can be drawn from the diffs alone.
-Usage: uv run python src/roadless/osm_diff_probe.py <geofabrik-region> <first-seq> <last-seq> <patches.parquet>
-Example: osm_diff_probe.py north-america/canada/new-brunswick 4946 4975 data/processed/210101/new-brunswick/patches.parquet
+With a base extract (.osm.pbf dated at or after the last diff), geometry for
+every created or modified way is read from the extract instead, so edited ways
+can be drawn too. The diffs then supply which ways changed and when.
+Usage: uv run python src/roadless/osm_diff_probe.py <geofabrik-region> <first-seq> <last-seq> <patches.parquet> [base.osm.pbf]
+Example: osm_diff_probe.py north-america/canada/new-brunswick 4946 4975 data/processed/210101/new-brunswick/patches.parquet data/raw/new-brunswick_261117.osm.pbf
 """
 import gzip
 import sys
@@ -63,7 +66,22 @@ def is_road(tags: dict) -> bool:
     return h is not None and h not in EXCLUDED_FCLASS
 
 
-def main(region: str, first: str, last: str, patches_path: str) -> None:
+def base_geometries(pbf: str, way_ids: set[int]) -> dict[str, list]:
+    """Coordinates of the wanted ways, read from a base extract with node locations."""
+    import osmium
+
+    out = {}
+    fp = osmium.FileProcessor(pbf, osmium.osm.NODE | osmium.osm.WAY).with_locations()
+    for o in fp:
+        if o.is_way() and o.id in way_ids:
+            try:
+                out[str(o.id)] = [(n.lon, n.lat) for n in o.nodes]
+            except osmium.InvalidLocationError:
+                pass
+    return out
+
+
+def main(region: str, first: str, last: str, patches_path: str, base_pbf: str | None = None) -> None:
     nodes, ways, counts = {}, {}, Counter()
     for seq in range(int(first), int(last) + 1):
         for action, kind, el in parse(fetch(region, seq)):
@@ -87,18 +105,31 @@ def main(region: str, first: str, last: str, patches_path: str) -> None:
         print(f"{label}: fully drawable from diffs {len(full):,} of {len(group):,}; "
               f"at least one node present {part:,}")
 
-    full_new = {i: e for i, e in created.items() if drawable(e) and len(e["refs"]) >= 2}
-    if not full_new:
-        return
-    geoms = [LineString([nodes[r] for r in e["refs"]]) for e in full_new.values()]
-    new = gpd.GeoDataFrame({"way_id": list(full_new)}, geometry=geoms, crs="EPSG:4326").to_crs(CRS)
     patches = gpd.read_parquet(patches_path)
     union = patches.geometry.union_all()
-    new_len = new.geometry.length.sum() / 1e3
-    inside = new.geometry.intersection(union).length.sum() / 1e3
-    print(f"drawable new roads: {new_len:,.0f} km; inside 2021 roadless land: {inside:,.0f} km "
-          f"({100 * inside / new_len:.1f}%)")
+
+    def report(label: str, coords: dict) -> None:
+        lines = {i: c for i, c in coords.items() if len(c) >= 2}
+        if not lines:
+            return
+        g = gpd.GeoDataFrame({"way_id": list(lines)}, geometry=[LineString(c) for c in lines.values()],
+                             crs="EPSG:4326").to_crs(CRS)
+        total = g.geometry.length.sum() / 1e3
+        inside = g.geometry.intersection(union).length.sum() / 1e3
+        print(f"{label}: {len(lines):,} ways, {total:,.0f} km; inside 2021 roadless land: "
+              f"{inside:,.0f} km ({100 * inside / total:.1f}%)")
+
+    if base_pbf is None:
+        report("created, from diff nodes only",
+               {i: [nodes[r] for r in e["refs"]] for i, e in created.items() if drawable(e)})
+        return
+    wanted = {int(i) for i in ways}
+    geoms = base_geometries(base_pbf, wanted)
+    print(f"resolved from base extract: {len(geoms):,} of {len(wanted):,} changed road ways "
+          f"(rest deleted or no longer a way after the diff window)")
+    report("created, from base extract", {i: g for i, g in geoms.items() if i in created})
+    report("modified, from base extract", {i: g for i, g in geoms.items() if i in modified})
 
 
 if __name__ == "__main__":
-    main(*sys.argv[1:5])
+    main(*sys.argv[1:6])

@@ -31,7 +31,7 @@ Do not expand scope without a design note in `docs/design/` or an ADR in
 
 ## Stack
 
-Python with uv and `pyproject.toml`; GeoPandas, Shapely and DuckDB (spatial)
+Python with uv and `pyproject.toml`; GeoPandas, Shapely, pyosmium (OSM diffs) and DuckDB (spatial)
 over GeoParquet files; no database server; local workstation first. Reasoning
 and fallbacks in `docs/decisions/0002-technology-stack.md`.
 
