@@ -22,6 +22,8 @@ uv run python src/roadless/fetch_inputs.py boundary "Nova Scotia"
 uv run python src/roadless/osm_roadless.py data/raw/nova-scotia_210101.shp.zip data/raw/boundary_nova_scotia.gpkg NS_210101
 # Change between two snapshots (fetch the 220101 file the same way)
 uv run python src/roadless/osm_change.py data/raw/ns_210101.shp.zip data/raw/ns_220101.shp.zip data/raw/boundary_nova_scotia.gpkg NS_2021_2022
+# Probe Geofabrik daily replication diffs (needs the 2021 patches from run_regions)
+uv run python src/roadless/osm_diff_probe.py north-america/canada/new-brunswick 4946 4975 data/processed/210101/new-brunswick/patches.parquet
 # Several provinces, resumable (skips finished ones; --force to redo)
 uv run python src/roadless/run_regions.py 210101 "Nova Scotia" Yukon
 ```

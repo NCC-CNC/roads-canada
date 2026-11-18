@@ -11,7 +11,7 @@ roadless-area refreshes are incremental and focus on remote land?
 | --- | --- | --- | --- |
 | Dated Geofabrik snapshots (1 January, 2014 onward) | No, but `osm_id` allows set differences | Public | Works now; yearly resolution |
 | Geofabrik internal history extracts (`.osh.pbf`) | Yes, per object version | Needs an OSM login | Best for exact "added since date D"; not tested |
-| Planet replication (minutely, hourly, daily diffs) | Yes | Public | Suited to a rolling refresh; needs a tool such as osmium to apply and filter. Not tested |
+| Replication diffs (Geofabrik per-region daily; planet minutely, hourly, daily) | Yes | Public | Suited to a rolling refresh. Geofabrik daily diffs tested for New Brunswick, see below |
 
 The free Geofabrik shapefile has no timestamp field, so the snapshot route
 detects change only by comparing `osm_id` sets between two files. A way that
@@ -52,15 +52,16 @@ difference of +6 km2 (0.05%). See "Three regions" below for what drives the gap.
 ## Recommendation
 
 1. Use dated snapshots for the first change layer; they need no new tooling.
-2. For a rolling refresh, test planet replication diffs filtered to Canada and
-   to the paper's road classes, and compare with a history extract.
+2. For a rolling refresh, use Geofabrik's per-region daily diffs, resolving
+   geometry against a base extract (see the replication test below). Compare
+   with a history extract if exact edit dates are needed.
 3. Validate flagged remote additions against imagery or the NRN before
    reporting them as new roads.
 
 ## Not done
 
-Only one region and one year pair. History extracts and replication diffs were
-assessed from documentation, not run. Removed-road effect on the +6 km2 gap not
+Only one region and one year pair. History extracts were assessed from
+documentation, not run. Removed-road effect on the +6 km2 gap not
 isolated.
 
 ## Scaling to other provinces
@@ -98,3 +99,40 @@ withdrawn. Both effects are small (at most 0.1% of roadless area here). A
 refresh should also flag changed ways, which needs object versions or
 timestamps (history extract or replication diffs), not the shapefile alone.
 Neither cause was isolated by direct test.
+
+## Replication diff test: New Brunswick, last 30 daily diffs
+
+Geofabrik publishes a daily `.osc.gz` per region at
+`download.geofabrik.de/<region>-updates/` (state file gives the latest
+sequence number). Retention is about four months: sequence 4850 (2026-07-15)
+existed, 4800 did not. `src/roadless/osm_diff_probe.py` fetched sequences
+4946 to 4975 (2026-10-19 to 2026-11-17), stdlib XML parsing only. Cost: 1.9 MB
+downloaded and 47 s, mostly network.
+
+| Measure | Result |
+| --- | --- |
+| Road ways created / modified | 553 / 903 |
+| Ways deleted (any type; deletes carry no tags) | 379 |
+| Created ways fully drawable from the diffs alone | 374 of 553 (68%) |
+| Modified ways fully drawable from the diffs alone | 76 of 903 (8%) |
+| Drawable new roads | 95 km, of which 12 km (12.4%) inside 2021 roadless land |
+
+Findings:
+
+- Diffs are tiny and give per-object timestamps and versions, so they separate
+  new ways from edited ways, which the snapshot method cannot. A monthly or
+  daily refresh is cheap to fetch.
+- A diff holds only changed nodes. Most new ways can be drawn from it, but
+  edited ways mostly cannot (8%), because their unchanged nodes are not in the
+  file. Geometry needs a base node store, such as the current regional extract
+  read with a location index (pyosmium or osmium), which this probe did not
+  add as a dependency.
+- Deletes lack tags, so removed roads cannot be told from other deletions
+  without the base data. Same fix.
+- The 12.4% "inside 2021 roadless land" figure uses the 2021 patches, so it
+  includes roads built between 2021 and October 2026. It is a plumbing check,
+  not a change estimate.
+- Retention is limited, so a rolling refresh must run at least every few
+  months, or start from a fresh extract each time.
+- Not tested: planet minutely or hourly diffs, applying diffs to a base extract
+  (`osmium apply-changes`), other regions.
