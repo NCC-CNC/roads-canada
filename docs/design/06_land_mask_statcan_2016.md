@@ -59,9 +59,10 @@ File, ArcGIS (.shp), English.
 The pipeline currently fetches its boundary from a pinned geoBoundaries commit
 (`fetch_inputs.py boundary`), which is reproducible and public. The StatCan
 file is only available here through the compilation. Statistics Canada boundary
-files are normally published under the Open Government Licence - Canada, but
-that is unverified for this copy, and StatCan itself returned 403 to automated
-download earlier. Before making this the default:
+files are published under the Statistics Canada Open Licence (the 2016
+reference guide in the download says use is governed by it; current terms at
+https://www.statcan.gc.ca/en/reference/licence, not yet read). StatCan returned
+403 to automated download earlier. Before making this the default:
 
 1. Confirm the licence on the Statistics Canada boundary files page and record
    it in `02_data_sources.md`.
