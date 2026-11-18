@@ -44,9 +44,15 @@ an inference from the land-area match, not a statement by the authors.
 `data/external/poley2022/canada_linear_features/Stats Canada Country Shapefile/lpr_000b16a_e.shp`
 holds 13 provincial and territorial polygons (field `PRUID`; Nova Scotia is
 12) in the file's Lambert Conformal Conic projection. It ships in the Poley
-2021 compilation (see `03_poley_baseline_dataset.md`). The `lpr_000b16a_e`
-name is Statistics Canada's 2016 digital boundary file, which follows the
-coast in detail.
+2021 compilation (see `03_poley_baseline_dataset.md`).
+
+`lpr_000b16a_e` is the 2016 **Cartographic** Boundary File: clipped to the
+detailed coastline (Nova Scotia is 666 polygons, 189,811 vertices, 54 MB for
+all of Canada). The matching **Digital** Boundary File is `lpr_000a16a_e`,
+which extends into coastal water (Nova Scotia is 2 polygons, 76,209 km2, 2 MB).
+Only the cartographic file gives the paper's 57,534 km2, so it is the one to
+use. Downloading from StatCan: Provinces/territories, Cartographic Boundary
+File, ArcGIS (.shp), English.
 
 ## Decision needed: provenance and licence
 
