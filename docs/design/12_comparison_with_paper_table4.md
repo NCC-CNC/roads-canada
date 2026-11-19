@@ -40,7 +40,13 @@ only; the other jurisdictions cannot be checked this way.
 - **Ontario ORN + MNR is 5.4% higher in roadless area** (66.5% against 63%),
   consistent with our road length being 17% below the paper's (note 11): the
   missing roads are not in our layers, so land near them counts as roadless.
-  The cause of the missing length is still open.
+  Checked: our NRN Ontario length (260,398 km) is within 0.5% of the paper's
+  NRN (261,714 km), so lengths are measured the same way. The paper summed
+  ORN and MNRF without removing overlap ("assessed the ORN and MNRF datasets
+  ... as well as the sum of the two", supplement), and so do we (ORN 264,611 +
+  MNR 196,573 km). The gap is therefore the source editions: the paper used
+  2019 and 2020 downloads, which LIO does not archive. It cannot be tested
+  further without those files.
 - **Alberta ABHFP is 22% lower** (36.4% against 47%), the one large
   disagreement. Our road length is 13% above the paper's (443,275 against
   391,825 km), so the 2023 HFI edition holds more roads than the one the paper
@@ -53,5 +59,6 @@ only; the other jurisdictions cannot be checked this way.
 - The pipeline needs no change to match the published method.
 - Differences from the paper in provincial datasets come from newer source
   editions, not from the method. Report the edition with every figure.
-- The headline figure for Alberta is the open question; Ontario needs the
-  missing-length cause found first.
+- The headline figure for Alberta is the open question; Ontario's gap is
+  an edition difference that cannot be tested; treat our current-edition figure
+  as the estimate.
