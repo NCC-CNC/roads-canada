@@ -26,9 +26,9 @@ Seconds are compute only, excluding download.
   Whole-country compute is about 8 minutes. The earlier tiling worry applies
   to memory on other machines and to larger future inputs, not to this run.
 - The BC, AB, ON and QC results match the figures in note 07 (same inputs).
-  Nova Scotia matches the paper within 0.5% (note 06). The other provinces
-  have not been compared with the paper: the paper's roadless areas are not in
-  our notes for them, and its layers are not published.
+  Nova Scotia is 2.2% above the paper (note 06). The paper reports only BC,
+  AB, ON, QC and NS, and all five OSM runs are within 2.3% of it (note 12);
+  the other jurisdictions cannot be compared with the paper.
 - Nunavut (15,818 patches) and the northern territories reflect sparse OSM
   coverage as much as true roadlessness; OSM is thin there (note 04).
 - Percentages for the territories are driven by what OSM has mapped, so treat
