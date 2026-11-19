@@ -63,9 +63,7 @@ unchecked. Elsewhere Winter roads are small (Alberta 40 segments, Ontario 234).
   comparable to OSM 2021 only loosely; the NRN there is older than the OSM snapshot.
 - **Ontario and Saskatchewan agree with OSM** (within 0.6 pp), where both are
   reasonably complete. Nova Scotia agrees within 1.2 pp (note 06).
-- **The paper's Table 4 values for these provinces are not in our notes**, so
-  no comparison with the paper was made beyond NS (note 06) and the NT and NU
-  road length above. That comparison needs the paper's tables entered by hand.
+- **Comparison with the paper's Table 4** is in note 12.
 
 ## BC Digital Road Atlas
 
@@ -142,7 +140,7 @@ are ROAD-GRAVEL-1L 130,656 km, ROAD-UNIMPROVED 102,017 km and TRUCK-TRAIL
   other linear features as roads, per the metadata (section 4.3), which would
   explain it, but I did not check.
 - About 15 minutes of compute in total for both variants (261 s and 239 s each).
-- The paper's Alberta roadless area is not in our notes, so no comparison with it.
+- The paper's Alberta roadless area (ABHFP 299,382 km2, 47%) is compared in note 12.
 
 ## Harmonization pattern for further datasets
 

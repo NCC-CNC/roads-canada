@@ -13,3 +13,13 @@ Reference copies of the paper and its Supporting Information.
 - Retrieved 2026-11-17.
 
 The authors' roadless-area outputs and code are not published with the paper.
+
+Extracted tables (made by `src/roadless/paper_tables.py`, which reads the PDF
+with `pdftotext`):
+
+- `poley2022_table2_road_length.csv`: Table 2, road length by dataset for all
+  13 jurisdictions.
+- `poley2022_table4_roadless.csv`: Table 4, roadless area and patch metrics
+  for BC, AB, ON, QC and NS. Three cells print with leading digits missing in
+  the PDF (AB OSM, AB ABHFP, ON GRIP roadless area). They are restored from
+  the printed percent cover and marked `reconstructed = yes`.

@@ -50,6 +50,11 @@ and fallbacks in `docs/decisions/0002-technology-stack.md`.
 - `uv run python src/roadless/bcdra_roadless.py [--strict]`: BC Digital Road Atlas (issue #4).
 - `uv run python src/roadless/abhfi_roadless.py [--strict]`: Alberta Human Footprint Inventory (issue #4).
 - `uv run python src/roadless/{on,qc,ns,yt}_roadless.py [--strict]`: Ontario, Quebec, Nova Scotia and Yukon provincial datasets (issue #4; note 11).
+- `uv run python src/roadless/paper_tables.py` then `compare_to_paper.py`: extract the paper's
+  Tables 2 and 4 to CSV, and compare our runs with Table 4 (note 12).
+- `uv run python src/roadless/nb_roadless.py`: New Brunswick NBRN plus Forest Roads (issue #4; note 13).
+- `uv run python src/roadless/{nl,mb}_roadless.py [--strict]` and `nt_roadless.py`: NL, MB and NT with the
+  resource-road sources the paper's baseline used (issue #4; note 14).
 
 Keep `CONTRIBUTING.md` Setup in step.
 
