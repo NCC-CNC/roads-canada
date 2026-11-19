@@ -2,6 +2,10 @@
 
 Usage: uv run python src/roadless/run_regions.py <YYMMDD> <province>... [--force]
        uv run python src/roadless/run_regions.py <YYMMDD> all
+       uv run python src/roadless/run_regions.py nrn <province>...|all [--force]
+
+The label `nrn` selects the National Road Network (current edition) instead of
+an OSM snapshot; results go to data/processed/nrn/<slug>/.
 
 Stages per province: fetch inputs, verify the zip, compute, write results to
 data/processed/<YYMMDD>/<slug>/ (stats.json and patches.parquet). A finished
@@ -16,7 +20,8 @@ import traceback
 import zipfile
 from pathlib import Path
 
-from fetch_inputs import fetch_boundary, fetch_osm
+import nrn_roadless
+from fetch_inputs import fetch_boundary, fetch_nrn, fetch_osm
 from osm_roadless import load_boundary, load_roads, roadless_patches, summarize
 
 # StatCan PRENAME -> Geofabrik slug under north-america/canada/
@@ -28,6 +33,15 @@ PROVINCES = {
     "Newfoundland and Labrador": "newfoundland-and-labrador",
     "Yukon": "yukon", "Northwest Territories": "northwest-territories",
     "Nunavut": "nunavut",
+}
+
+
+# StatCan PRENAME -> NRN two-letter code
+NRN_CODES = {
+    "British Columbia": "bc", "Alberta": "ab", "Saskatchewan": "sk", "Manitoba": "mb",
+    "Ontario": "on", "Quebec": "qc", "New Brunswick": "nb", "Nova Scotia": "ns",
+    "Prince Edward Island": "pe", "Newfoundland and Labrador": "nl", "Yukon": "yt",
+    "Northwest Territories": "nt", "Nunavut": "nu",
 }
 
 
@@ -45,14 +59,20 @@ def run_one(province: str, stamp: str, out_root: Path, force: bool) -> str:
     if (out / "stats.json").exists() and not force:
         return "skipped (done)"
     out.mkdir(parents=True, exist_ok=True)
-    osm_zip = fetch_osm(f"north-america/canada/{slug}", stamp)
-    verify_zip(osm_zip)
+    if stamp == "nrn":
+        gpkg = fetch_nrn(NRN_CODES[province])
+        verify_zip(Path("data/raw/nrn") / f"nrn_rrn_{NRN_CODES[province]}_GPKG.zip")
+        load = lambda: nrn_roadless.load_roads(gpkg)
+    else:
+        osm_zip = fetch_osm(f"north-america/canada/{slug}", stamp)
+        verify_zip(osm_zip)
+        load = lambda: load_roads(osm_zip)
     boundary = load_boundary(fetch_boundary(province))
     t = time.time()
-    roads = load_roads(osm_zip)
+    roads = load()
     patches = roadless_patches(roads, boundary)
     stats = summarize(patches, boundary.geometry.area.sum() / 1e6)
-    stats.update(province=province, snapshot=stamp, roads_kept=len(roads),
+    stats.update(province=province, snapshot=stamp, roads_kept=len(roads), road_km=round(roads.length.sum() / 1000),
                  seconds=round(time.time() - t))
     patches.to_parquet(out / "patches.parquet")
     (out / "stats.json").write_text(json.dumps(stats, indent=2))  # written last = done marker

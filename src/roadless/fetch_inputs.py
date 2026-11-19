@@ -4,6 +4,9 @@ Usage:
   uv run python src/roadless/fetch_inputs.py osm <region-path> [YYMMDD|latest]
   uv run python src/roadless/fetch_inputs.py boundary <province name>
   uv run python src/roadless/fetch_inputs.py pbf <region-path> <YYMMDD>
+  uv run python src/roadless/fetch_inputs.py nrn <two-letter code, e.g. ns>
+  uv run python src/roadless/fetch_inputs.py bcdra
+  uv run python src/roadless/fetch_inputs.py abhfi
 
 Examples:
   fetch_inputs.py osm north-america/canada/nova-scotia 210101
@@ -21,6 +24,7 @@ leaves coastal slivers and gives more patches than the paper.
 import os
 import sys
 import urllib.request
+import zipfile
 from pathlib import Path
 
 RAW = Path("data/raw")
@@ -60,6 +64,66 @@ def fetch_pbf(region: str, stamp: str) -> Path:
     return download(f"{GEOFABRIK}/{region}-{stamp}.osm.pbf", RAW / f"{name}_{stamp}.osm.pbf")
 
 
+NRN_URL = "https://geo.statcan.gc.ca/nrn_rrn/{p}/nrn_rrn_{p}_GPKG.zip"
+
+
+def fetch_nrn(code: str) -> Path:
+    """National Road Network GeoPackage (English) for one province or territory.
+
+    Downloads the Statistics Canada zip to data/raw/nrn/ and extracts the
+    English .gpkg next to it; returns the .gpkg path. Current edition only:
+    StatCan publishes no dated archive at this URL.
+    """
+    code = code.lower()
+    zip_path = download(NRN_URL.format(p=code), RAW / "nrn" / f"nrn_rrn_{code}_GPKG.zip")
+    found = sorted((RAW / "nrn" / code).rglob("*_en.gpkg"))
+    if found:
+        return found[-1]
+    with zipfile.ZipFile(zip_path) as z:
+        z.extractall(RAW / "nrn" / code, [n for n in z.namelist() if n.endswith("_en.gpkg")])
+    return sorted((RAW / "nrn" / code).rglob("*_en.gpkg"))[-1]
+
+
+BCDRA_URL = "https://nrs.objectstore.gov.bc.ca/itqlyp/DRA_Public/dgtl_road_atlas.gdb.zip"
+
+
+def fetch_bcdra() -> Path:
+    """BC Digital Road Atlas (full province geodatabase, about 258 MB).
+
+    The zip holds the geodatabase files flat, so they are extracted into a
+    `dra.gdb` folder GDAL can open. Current edition only (monthly updates).
+    """
+    d = RAW / "bc_dra"
+    zip_path = download(BCDRA_URL, d / "dgtl_road_atlas.gdb.zip")
+    gdb = d / "dra.gdb"
+    if not gdb.exists():
+        tmp = d / "dra.gdb.part"
+        with zipfile.ZipFile(zip_path) as z:
+            z.extractall(tmp)
+        tmp.replace(gdb)
+    return gdb
+
+
+ABHFI_URL = "https://ftp-public.abmi.ca///GISData/HumanFootprint/2023/HFI2023_v1_1.gdb.zip"
+
+
+def fetch_abhfi() -> Path:
+    """Alberta Human Footprint Inventory 2023 (ABMI), about 4.8 GB zip.
+
+    Licence (metadata section 1.11): reproduction free for educational, data
+    collection or non-profit purposes with acknowledgement; no resale.
+    Downloads are not resumable here (a stale .part is overwritten); extracts to
+    data/raw/ab_hfi/ and returns the geodatabase path.
+    """
+    d = RAW / "ab_hfi"
+    zip_path = download(ABHFI_URL, d / "HFI2023_v1_1.gdb.zip")
+    gdb = d / "HFI2023_v1_1" / "HFI2023_v1_1.gdb"
+    if not gdb.exists():
+        with zipfile.ZipFile(zip_path) as z:
+            z.extractall(d)
+    return gdb
+
+
 STATCAN_ZIP = RAW / "lpr_000b16a_e.zip"
 
 
@@ -91,4 +155,4 @@ def fetch_boundary(province: str) -> Path:
 
 if __name__ == "__main__":
     kind, *rest = sys.argv[1:]
-    print({"osm": fetch_osm, "boundary": fetch_boundary, "pbf": fetch_pbf}[kind](*rest))
+    print({"osm": fetch_osm, "boundary": fetch_boundary, "pbf": fetch_pbf, "nrn": fetch_nrn, "bcdra": fetch_bcdra, "abhfi": fetch_abhfi}[kind](*rest))

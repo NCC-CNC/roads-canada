@@ -49,3 +49,57 @@ def test_verify_zip_rejects_truncated(tmp_path):
     bad.write_bytes(good.read_bytes()[:-30])
     with pytest.raises(Exception):
         verify_zip(bad)
+
+
+def test_nrn_loader_filters_road_class(tmp_path):
+    from nrn_roadless import load_roads
+
+    gdf = gpd.GeoDataFrame(
+        {
+            "NID": ["a", "b"], "ROADCLASS": ["Collector", "Winter"],
+            "PAVSTATUS": ["Paved", "Unknown"], "CLOSING": ["Unknown", "Unknown"],
+            "REVDATE": ["20200101", "20200101"],
+        },
+        geometry=[LineString([(0, 0), (1000, 0)]), LineString([(0, 500), (1000, 500)])],
+        crs=CRS,
+    )
+    path = tmp_path / "nrn.gpkg"
+    gdf.to_file(path, layer="NRN_XX_1_0_ROADSEG", driver="GPKG")
+
+    assert len(load_roads(path)) == 2  # default keeps every class, as the paper did
+    assert list(load_roads(path, excluded=["Winter"])["ROADCLASS"]) == ["Collector"]
+
+
+def test_bcdra_loader_filters(tmp_path):
+    from bcdra_roadless import LAYER, load_roads
+
+    classes = ["resource", "ferry", "driveway", "trail", "local"]
+    surfaces = ["rough", "unknown", "paved", "loose", "decommissioned"]
+    gdf = gpd.GeoDataFrame(
+        {"ID": range(5), "RD_CLASS": classes, "FEAT_TYPE": ["Road"] * 5, "RD_SURFACE": surfaces},
+        geometry=[LineString([(0, i * 100), (1000, i * 100)]) for i in range(5)],
+        crs=CRS,
+    )
+    path = tmp_path / "dra.gpkg"
+    gdf.to_file(path, layer=LAYER, driver="GPKG")
+
+    # Paper exclusions drop ferry and driveway only; strict also drops trail and decommissioned.
+    assert sorted(load_roads(path)["RD_CLASS"]) == ["local", "resource", "trail"]
+    assert sorted(load_roads(path, strict=True)["RD_CLASS"]) == ["resource"]
+
+
+def test_abhfi_loader_filters(tmp_path):
+    from abhfi_roadless import LAYER, load_roads
+
+    types = ["ROAD-GRAVEL-1L", "AIRP-RUNWAY", "ROAD-VEGETATED", "ROAD-WINTER", "TRUCK-TRAIL"]
+    gdf = gpd.GeoDataFrame(
+        {"FEATURE_TY": types, "SOURCE": ["x"] * 5, "YEAR": [2020] * 5},
+        geometry=[LineString([(0, i * 100), (1000, i * 100)]) for i in range(5)],
+        crs=CRS,
+    )
+    path = tmp_path / "hfi.gpkg"
+    gdf.to_file(path, layer=LAYER, driver="GPKG")
+
+    assert sorted(load_roads(path)["FEATURE_TY"]) == [
+        "ROAD-GRAVEL-1L", "ROAD-VEGETATED", "ROAD-WINTER", "TRUCK-TRAIL"]
+    assert sorted(load_roads(path, strict=True)["FEATURE_TY"]) == ["ROAD-GRAVEL-1L", "TRUCK-TRAIL"]
