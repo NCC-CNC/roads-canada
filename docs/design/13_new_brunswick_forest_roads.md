@@ -41,7 +41,7 @@ Per-run results are in `data/processed/nb/new-brunswick/stats.json`.
 
 ## Newfoundland and Labrador
 
-Still no download. The Resource Access Roads layer (Fisheries, Forestry and
+Resolved in note 14 (the layer is on the NL GeoHub). Earlier text: no download. The Resource Access Roads layer (Fisheries, Forestry and
 Agriculture) is only in the GeoAtlas viewer; `geoatlas.gov.nl.ca` has no REST
 path, `gis.gov.nl.ca` returned 503, and the open data hub search returned
 nothing. The help file gives `ResourceRoads@gov.nl.ca` as the contact, so the
