@@ -56,6 +56,9 @@ and fallbacks in `docs/decisions/0002-technology-stack.md`.
 - `uv run python src/roadless/{nl,mb}_roadless.py [--strict]` and `nt_roadless.py`: NL, MB and NT with the
   resource-road sources the paper's baseline used (issue #4; note 14).
 
+- `uv run python src/roadless/abhfi_diagnostics.py [outdir]`: why Alberta HFI 2023 differs from the paper
+  (class footprint, isolation, largest-block check; note 12; needs the `abhfi_strict` run).
+
 Keep `CONTRIBUTING.md` Setup in step.
 
 ## Repo structure
