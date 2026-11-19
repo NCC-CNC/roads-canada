@@ -10,17 +10,17 @@ are in notes 10, 11, 13 and 14.
 | --- | --- | --- | --- | --- | --- | --- |
 | BC | 81.4 | 89.7 | BC DRA | 53.9 | 54.8 | 52.0 |
 | AB | 56.7 | 59.4 | HFI 2023 | 36.4 | 44.2 | 47.0 |
-| SK | 56.3 | 56.8 | none (NRN, OSM only) |  |  |  |
-| MB | 83.4 | 85.2 | NRN + MLI 20k + BEAD | 77.2 | 80.5 |  |
+| SK | 56.3 | 56.8 | none (NRN, OSM only) | n/a | n/a | n/a |
+| MB | 83.4 | 85.2 | NRN + MLI 20k + BEAD | 77.2 | 80.5 | n/a |
 | ON | 75.9 | 75.9 | ORN + MNR | 66.5 | 66.7 | 63.0 |
 | QC | 86.4 | 91.4 | RQTT | 70.1 | 70.1 | 70.0 |
-| NB | 43.0 | 46.6 | NBRN + Forest Roads | 3.4 |  |  |
+| NB | 43.0 | 46.6 | NBRN + Forest Roads | 3.4 | n/a | n/a |
 | NS | 20.5 | 21.7 | NSTDB | 9.4 | 9.4 | 9.0 |
-| PE | 5.8 | 6.0 | none (NRN, OSM only) |  |  |  |
-| NL | 90.7 | 93.7 | NRN + Resource Access Roads | 88.2 | 88.4 |  |
-| YT | 96.8 | 97.7 | Road Network + Forest Resource Roads | 97.5 | 97.6 |  |
-| NT | 99.2 | 99.1 | NRN + BEAD | 98.5 |  |  |
-| NU | 99.9 | 100.0 | none (NRN, OSM only) |  |  |  |
+| PE | 5.8 | 6.0 | none (NRN, OSM only) | n/a | n/a | n/a |
+| NL | 90.7 | 93.7 | NRN + Resource Access Roads | 88.2 | 88.4 | n/a |
+| YT | 96.8 | 97.7 | Road Network + Forest Resource Roads | 97.5 | 97.6 | n/a |
+| NT | 99.2 | 99.1 | NRN + BEAD | 98.5 | n/a | n/a |
+| NU | 99.9 | 100.0 | none (NRN, OSM only) | n/a | n/a | n/a |
 
 "Best source" is the most detailed dataset run for the jurisdiction, with the
 paper's exclusions. "Strict" drops more roads (vegetated, winter, track and

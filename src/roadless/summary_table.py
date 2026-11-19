@@ -38,7 +38,7 @@ def pct(label, slug):
 
 
 def fmt(x):
-    return "" if x is None else f"{x:.1f}"
+    return "n/a" if x is None else f"{x:.1f}"
 
 
 def main():
@@ -48,7 +48,7 @@ def main():
         out.append([code, fmt(pct("210101", slug)), fmt(pct("nrn", slug)), desc,
                     fmt(pct(label, slug) if label else None),
                     fmt(pct(f"{label}_strict", slug) if label else None),
-                    str(paper[(code, pds)]) if pds else ""])
+                    str(paper[(code, pds)]) if pds else "n/a"])
     head = ["Jurisdiction", "OSM 2021 %", "NRN %", "Best source", "Best %", "Strict %", "Paper provincial %"]
     print("| " + " | ".join(head) + " |\n| " + " | ".join("---" for _ in head) + " |")
     for r in out:
