@@ -42,7 +42,7 @@ paper's provincial-dataset result, where it had one.
 
 ## Choosing a headline figure
 
-This choice is the project owner's. A rule that fits the evidence so far:
+Decided on 2026-11-19 by the project owner (ADR 0004, issue #30):
 
 1. Headline is the best-source default for each jurisdiction, with the strict
    figure shown as the upper end of a range.

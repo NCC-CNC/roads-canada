@@ -19,8 +19,8 @@ roadless-area numbers. See `docs/design/00_project_brief.md`.
 
 Prototype stage. Roadless-area scripts exist for OSM, NRN and provincial or
 resource-road datasets (all 13 jurisdictions), plus OSM change detection and a
-comparison with the paper's Table 4 (notes 05 to 16). Open decisions: the
-headline rule (note 15), sending the data requests (note 16), and licence
+comparison with the paper's Table 4 (notes 05 to 16). Headline rule decided
+(ADR 0004). Open decisions: sending the data requests (note 16), and licence
 review (note 06). Open GitHub issues are the live task tracker.
 
 ## Scope
