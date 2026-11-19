@@ -44,5 +44,22 @@ Per-run results are in `data/processed/nb/new-brunswick/stats.json`.
 Still no download. The Resource Access Roads layer (Fisheries, Forestry and
 Agriculture) is only in the GeoAtlas viewer; `geoatlas.gov.nl.ca` has no REST
 path, `gis.gov.nl.ca` returned 503, and the open data hub search returned
-nothing. The help file gives ResourceRoads@gov.nl.ca as the contact, so the
+nothing. The help file gives `ResourceRoads@gov.nl.ca` as the contact, so the
 next step is a direct request.
+
+## Manitoba, Saskatchewan and the Northwest Territories
+
+Searched again on 2026-11-19; nothing new that would change a result.
+
+- **Manitoba:** the geoportal's Manitoba Road Network and Highway Inventory
+  (2016 to 2022 editions) cover roads the infrastructure department maintains:
+  trunk highways, provincial roads and access roads, not municipal or forest
+  roads. No forest or resource road layer turned up. Next step: ask Manitoba
+  forestry or check the DataMB catalogue by hand.
+- **Saskatchewan:** the GeoHub has forest boundary and forest cover layers but
+  no road layer found beyond the NRN-derived SURN (note 11). The forest data
+  contact is `egis@gov.sk.ca`; a request for forest access roads is the next
+  step.
+- **Northwest Territories:** the Transportation_LCC conflated roads and trails
+  layer is the one already fetched (note 11). The portal's winter road items
+  are opening and closing dates and traffic counts, not new geometry.
