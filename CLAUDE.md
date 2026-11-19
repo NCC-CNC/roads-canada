@@ -17,9 +17,11 @@ roadless-area numbers. See `docs/design/00_project_brief.md`.
 
 ## Project status
 
-Design stage. No code yet. Next milestones: survey current open road data by
-jurisdiction, then prototype a scripted roadless-area pipeline. Open GitHub
-issues are the live task tracker.
+Prototype stage. Roadless-area scripts exist for OSM, NRN and provincial or
+resource-road datasets (all 13 jurisdictions), plus OSM change detection and a
+comparison with the paper's Table 4 (notes 05 to 16). Open decisions: the
+headline rule (note 15), sending the data requests (note 16), and licence
+review (note 06). Open GitHub issues are the live task tracker.
 
 ## Scope
 
@@ -55,6 +57,9 @@ and fallbacks in `docs/decisions/0002-technology-stack.md`.
 - `uv run python src/roadless/nb_roadless.py`: New Brunswick NBRN plus Forest Roads (issue #4; note 13).
 - `uv run python src/roadless/{nl,mb}_roadless.py [--strict]` and `nt_roadless.py`: NL, MB and NT with the
   resource-road sources the paper's baseline used (issue #4; note 14).
+
+- `uv run python src/roadless/summary_table.py [out.csv]`: consolidated roadless area by jurisdiction,
+  best source against OSM, NRN and the paper (note 15).
 
 - `uv run python src/roadless/abhfi_diagnostics.py [outdir]`: why Alberta HFI 2023 differs from the paper
   (class footprint, isolation, largest-block check; note 12; needs the `abhfi_strict` run).

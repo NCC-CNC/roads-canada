@@ -29,7 +29,12 @@ See `docs/design/00_project_brief.md` for the brief and
 
 ## Status
 
-Early design. No code yet. Open issues track the next steps.
+Prototype stage. Scripts under `src/roadless/` compute roadless area from OSM
+snapshots, the National Road Network and provincial or resource-road datasets
+for all 13 jurisdictions, detect change between OSM snapshots, and compare the
+results with Poley et al. (2022) Table 4. Results by jurisdiction are in
+`docs/design/15_results_by_jurisdiction.md`; the design notes in `docs/design/`
+are numbered in the order the work was done. Open issues track the next steps.
 
 ## Solo-maintainer auto-merge (optional)
 
