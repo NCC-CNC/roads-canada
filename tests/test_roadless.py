@@ -201,3 +201,21 @@ def test_paper_tables_extract():
     for r in t4:
         calc = int(r["roadless_km2"]) / int(r["area_km2"]) * 100
         assert abs(calc - float(r["pct_roadless"])) < 1, r
+
+
+def test_isolated_spur_removes_more_roadless_land_than_adjacent_road():
+    # Same 4 km of added road: 500 m beside an existing road it removes about
+    # 2 km2 (a 0.5 km wider strip), in intact land about 8 km2 (4 km x 2 km).
+    # This is why road length is a weak guide to roadless area (note 12).
+    side = 20_000
+    land = gpd.GeoDataFrame(geometry=[box(0, 0, side, side)], crs=CRS)
+    base = LineString([(0, 2_000), (side, 2_000)])
+    near = LineString([(5_000, 2_500), (9_000, 2_500)])      # runs beside the base road
+    far = LineString([(5_000, 14_000), (9_000, 14_000)])     # isolated
+
+    def roadless(*lines):
+        return roadless_patches(gpd.GeoDataFrame(geometry=list(lines), crs=CRS), land)["area_km2"].sum()
+
+    loss_near = roadless(base) - roadless(base, near)
+    loss_far = roadless(base) - roadless(base, far)
+    assert loss_far > 2 * loss_near

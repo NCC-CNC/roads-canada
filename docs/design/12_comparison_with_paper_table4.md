@@ -48,17 +48,52 @@ only; the other jurisdictions cannot be checked this way.
   2019 and 2020 downloads, which LIO does not archive. It cannot be tested
   further without those files.
 - **Alberta ABHFP is 22% lower** (36.4% against 47%), the one large
-  disagreement. Our road length is 13% above the paper's (443,275 against
-  391,825 km), so the 2023 HFI edition holds more roads than the one the paper
-  used. The strict variant (44.2%, 282,869 km2) is 5.5% below the paper, so
-  the paper's figure sits between our default and strict. Not resolved; the
-  paper's edition of the HFI would have to be found.
+  disagreement. Mostly explained, see "Alberta gap" below.
+
+## Alberta gap
+
+Our road length is 13% above the paper's (443,275 against 391,825 km). The 2023
+HFI metadata (section 4.3) says it added two road types, ROAD-VEGETATED
+(34,356 km) and ROAD-VEGETATED-OSE (8,507 km), access dispositions with no
+detectable road surface. `abhfi_diagnostics.py` and a run without those two
+types give:
+
+| Variant | Road km | Roadless % | Patches | Mean km2 | Largest km2 | Over 1,000 km2 |
+| --- | --- | --- | --- | --- | --- | --- |
+| Paper (ABHFP) | 391,825 | 47.0 | 9,332 | 32.1 | 91,101 | 32 |
+| 2023, paper exclusion | 443,275 | 36.4 | 12,092 | 19.2 | 32,128 | 23 |
+| 2023, minus the two new types | 401,342 | 43.7 | 9,780 | 28.6 | 36,877 | 32 |
+| 2023, strict (also minus winter) | 398,892 | 44.2 | 9,670 | 29.3 | 75,739 | 26 |
+
+The paper's roadless cell is restored from the printed 47% (note 04); its mean
+patch size times patch count (299,557 km2) agrees with it.
+
+- **Length is a weak guide.** A road beside an existing one removes little new
+  land; an isolated one removes up to 2 km2 per km. Unique roadless loss per
+  class (land that is roadless only if the class is absent): vegetated 1.17
+  km2 per km (39,196 km2 from 7.6% of road length), truck trail 0.55,
+  vegetated-OSE 0.46, winter 0.70, unimproved 0.27, gravel 0.12, paved and
+  other 0.06. Vegetated roads are also the most isolated class (median 780 m
+  to the nearest other class, 25% beyond 2 km).
+- **The two new types explain most of the gap** (36.4 to 43.7%, and the
+  patch count and the count over 1,000 km2 return to the paper's range).
+- **The rest is one large block.** The paper's largest patch is 91,101 km2;
+  ours is 36,877 km2 (75,739 in strict). In the strict run's largest patch,
+  294 km of ROAD-WINTER (source ABMI22, no year) alone cut it from 75,739 to
+  36,879 km2; vegetated roads add 5,529 km (52,317 alone) and vegetated-OSE
+  4,446 km (70,002 alone). A block that intact in the paper's 2018 edition
+  was split in 2023 by roads that edition probably did not hold.
+  That is an inference: only the 2018 edition itself can confirm it.
+- **Not recoverable from the data.** Only 3% of road segments carry a `YEAR`
+  and 377,000 km carry `SOURCE` ABMI22 (the 2022 rewrite), so a 2018 cut
+  cannot be rebuilt. The 2018 edition would need requesting from ABMI.
 
 ## Consequences for #4
 
 - The pipeline needs no change to match the published method.
 - Differences from the paper in provincial datasets come from newer source
   editions, not from the method. Report the edition with every figure.
-- The headline figure for Alberta is the open question; Ontario's gap is
+- The headline figure for Alberta is a rule choice (note 15): default, strict or
+  minus the new types. Ontario's gap is
   an edition difference that cannot be tested; treat our current-edition figure
   as the estimate.
