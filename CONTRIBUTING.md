@@ -33,6 +33,8 @@ uv run python src/roadless/run_regions.py 210101 "Nova Scotia" Yukon
 uv run python src/roadless/run_regions.py nrn "Nova Scotia" Yukon
 # BC Digital Road Atlas (about 15 minutes; --strict also drops trails and decommissioned roads)
 uv run python src/roadless/bcdra_roadless.py [--strict]
+# Alberta Human Footprint Inventory (4.8 GB download, about 5 minutes per variant)
+uv run python src/roadless/abhfi_roadless.py [--strict]
 ```
 
 Run the tests with `uv run pytest`. There is no lint step yet; CI runs whatever

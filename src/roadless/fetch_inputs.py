@@ -6,6 +6,7 @@ Usage:
   uv run python src/roadless/fetch_inputs.py pbf <region-path> <YYMMDD>
   uv run python src/roadless/fetch_inputs.py nrn <two-letter code, e.g. ns>
   uv run python src/roadless/fetch_inputs.py bcdra
+  uv run python src/roadless/fetch_inputs.py abhfi
 
 Examples:
   fetch_inputs.py osm north-america/canada/nova-scotia 210101
@@ -103,6 +104,26 @@ def fetch_bcdra() -> Path:
     return gdb
 
 
+ABHFI_URL = "https://ftp-public.abmi.ca///GISData/HumanFootprint/2023/HFI2023_v1_1.gdb.zip"
+
+
+def fetch_abhfi() -> Path:
+    """Alberta Human Footprint Inventory 2023 (ABMI), about 4.8 GB zip.
+
+    Licence (metadata section 1.11): reproduction free for educational, data
+    collection or non-profit purposes with acknowledgement; no resale.
+    Downloads are not resumable here (a stale .part is overwritten); extracts to
+    data/raw/ab_hfi/ and returns the geodatabase path.
+    """
+    d = RAW / "ab_hfi"
+    zip_path = download(ABHFI_URL, d / "HFI2023_v1_1.gdb.zip")
+    gdb = d / "HFI2023_v1_1" / "HFI2023_v1_1.gdb"
+    if not gdb.exists():
+        with zipfile.ZipFile(zip_path) as z:
+            z.extractall(d)
+    return gdb
+
+
 STATCAN_ZIP = RAW / "lpr_000b16a_e.zip"
 
 
@@ -134,4 +155,4 @@ def fetch_boundary(province: str) -> Path:
 
 if __name__ == "__main__":
     kind, *rest = sys.argv[1:]
-    print({"osm": fetch_osm, "boundary": fetch_boundary, "pbf": fetch_pbf, "nrn": fetch_nrn, "bcdra": fetch_bcdra}[kind](*rest))
+    print({"osm": fetch_osm, "boundary": fetch_boundary, "pbf": fetch_pbf, "nrn": fetch_nrn, "bcdra": fetch_bcdra, "abhfi": fetch_abhfi}[kind](*rest))

@@ -1,12 +1,12 @@
-# National Road Network and BC Digital Road Atlas roadless areas (issue #4)
+# NRN, BC Digital Road Atlas and Alberta HFI roadless areas (issue #4)
 
 Issue #4 asked for one provincial road dataset through the same pipeline, with
 a vehicle-road filter, compared with OSM and the paper. I chose the National
 Road Network (NRN, Statistics Canada) because it covers every province and
 territory in one schema, so it also tests the harmonization pattern 13 times
 and addresses the NT and NU discrepancy in note 04. The BC Digital Road Atlas (a provincial dataset with
-resource roads) is the second dataset, in the last section. Alberta Human
-Footprint is not done.
+resource roads) is the second dataset, in the last section. The Alberta
+Human Footprint Inventory is the third, also in the last sections.
 
 Run: `run_regions.py nrn all`, current NRN GeoPackages (English) from
 `geo.statcan.gc.ca/nrn_rrn/`, paper method (1 km buffer, StatCan 2016 land
@@ -103,20 +103,62 @@ driveway, pedestrian, proposed, runway, water. `--strict` also drops trail
   worth considering.
 - The paper's BC roadless area is not in our notes, so no comparison with it.
 
+## Alberta Human Footprint Inventory
+
+`abhfi_roadless.py [--strict]`, ABMI HFI 2023 (v1.1, geodatabase dated
+2026-08-04, 4.8 GB zip from the ABMI public FTP), road centerline layer
+`o03_Roads_Centerlines_HFI_2023` (1,242,807 segments, 449,753 km, EPSG:3400).
+The 4.2 million line seismic, trail and other linear features layer is not
+roads and is not read. Licence (metadata section 1.11): reproduction is free for
+educational, data collection or non-profit use with acknowledgement; no resale.
+That fits this project, but redistribution of derived outputs should carry the
+ABMI acknowledgement.
+
+Default filter is the paper's one DRA-style exclusion for Alberta (note 02),
+`FEATURE_TY` AIRP-RUNWAY (plus RIS-AIRP-RUNWAY, absent in this edition).
+`--strict` also drops ROAD-VEGETATED (34,356 km) and ROAD-VEGETATED-OSE
+(8,507 km), which the metadata defines as access dispositions with no
+detectable road surface, and ROAD-WINTER (2,508 km). The largest classes kept
+are ROAD-GRAVEL-1L 130,656 km, ROAD-UNIMPROVED 102,017 km and TRUCK-TRAIL
+60,185 km.
+
+| AB source | Road km | Roadless km2 | Roadless % | Patches |
+| --- | --- | --- | --- | --- |
+| OSM 2021 | not recorded | 362,751 | 56.7 | 8,070 |
+| NRN 17.0 | 239,762 | 380,201 | 59.4 | 7,306 |
+| HFI 2023, paper exclusion | 443,275 | 232,618 | 36.4 | 12,092 |
+| HFI 2023, strict | 398,892 | 282,869 | 44.2 | 9,670 |
+
+- HFI roadless area is 20 points below OSM and 23 below the NRN. The HFI maps
+  gravel, unimproved and truck-trail roads that neither other source has, so
+  OSM and NRN overstate Alberta roadless area as they do in BC.
+- The filter matters here, unlike BC: the strict variant adds 7.8 points
+  (45,000 km of vegetated and winter road). Whether a vegetated access
+  disposition blocks roadless land is a conservation judgement, not a data
+  question; the paper's choice is the default, and the strict value is the
+  upper bound.
+- The HFI total (443,275 km) is 13% above the paper's ABHFP figure for Alberta
+  (391,825 km). The 2023 edition has added road types and reclassified some
+  other linear features as roads, per the metadata (section 4.3), which would
+  explain it, but I did not check.
+- About 15 minutes of compute in total for both variants (261 s and 239 s each).
+- The paper's Alberta roadless area is not in our notes, so no comparison with it.
+
 ## Harmonization pattern for further datasets
 
 A new dataset needs only a loader: read the road layer, drop non-vehicle
 classes with an explicit documented list, reproject to EPSG:3347, return a
 GeoDataFrame. `roadless_patches`, `summarize`, the boundary and the resumable
 runner are shared. `nrn_roadless.py` (about 30 lines) is the template; the
-runner selects the source by label (`nrn` or a snapshot date). The DRA loader
-(`bcdra_roadless.py`) follows the same shape with its own filter and a
-standalone entry point. The loader test
+runner selects the source by label (`nrn` or a snapshot date). The DRA and HFI loaders
+(`bcdra_roadless.py`, `abhfi_roadless.py`) follow the same shape: a loader,
+a documented exclusion list with a `--strict` variant, and a one-line call to
+`single_dataset.run`, which writes the same output layout as the runner. The loader test
 is in `tests/test_roadless.py`.
 
 ## Limits
 
-- The DRA is not archived either; record the edition with results.
+- The DRA and HFI are not archived either; record the edition with results.
 - No NRN edition is archived at the download URL, so a rerun gets whatever is
   current; record the edition (`NRN_<prov>_<ed>_GPKG_en.gpkg`) with results.
 - The NRN licence (OGL-Canada per the catalogue) was not read in full.

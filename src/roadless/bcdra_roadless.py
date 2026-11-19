@@ -12,15 +12,14 @@ roadless area. Boundary is the shared StatCan 2016 mask.
 Usage: uv run python src/roadless/bcdra_roadless.py [--strict]
 Output: data/processed/bcdra[_strict]/british-columbia/ (stats.json, patches.parquet)
 """
-import json
 import sys
-import time
 from pathlib import Path
 
 import geopandas as gpd
 
-from fetch_inputs import fetch_bcdra, fetch_boundary
-from osm_roadless import CRS, load_boundary, roadless_patches, summarize
+from fetch_inputs import fetch_bcdra
+from osm_roadless import CRS
+from single_dataset import run
 
 LAYER = "DGTL_ROAD_ATLAS_MPAR_SP"
 EXCLUDED_CLASS = ["ferry", "driveway", "pedestrian", "proposed", "runway", "water"]
@@ -39,18 +38,8 @@ def load_roads(gdb: Path, strict: bool = False) -> gpd.GeoDataFrame:
 
 
 def main(strict: bool) -> None:
-    out = Path("data/processed") / ("bcdra_strict" if strict else "bcdra") / "british-columbia"
-    out.mkdir(parents=True, exist_ok=True)
-    boundary = load_boundary(fetch_boundary("British Columbia"))
-    t = time.time()
-    roads = load_roads(fetch_bcdra(), strict)
-    patches = roadless_patches(roads, boundary)
-    stats = summarize(patches, boundary.geometry.area.sum() / 1e6)
-    stats.update(province="British Columbia", strict=strict, roads_kept=len(roads),
-                 road_km=round(roads.length.sum() / 1000), seconds=round(time.time() - t))
-    patches.to_parquet(out / "patches.parquet")
-    (out / "stats.json").write_text(json.dumps(stats, indent=2))
-    print(f"{stats['road_km']:,} km, {stats['pct_roadless']:.1f}% roadless, {stats['patches']} patches")
+    run("bcdra_strict" if strict else "bcdra", "British Columbia", "british-columbia",
+        lambda: load_roads(fetch_bcdra(), strict), strict=strict)
 
 
 if __name__ == "__main__":

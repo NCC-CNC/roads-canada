@@ -86,3 +86,20 @@ def test_bcdra_loader_filters(tmp_path):
     # Paper exclusions drop ferry and driveway only; strict also drops trail and decommissioned.
     assert sorted(load_roads(path)["RD_CLASS"]) == ["local", "resource", "trail"]
     assert sorted(load_roads(path, strict=True)["RD_CLASS"]) == ["resource"]
+
+
+def test_abhfi_loader_filters(tmp_path):
+    from abhfi_roadless import LAYER, load_roads
+
+    types = ["ROAD-GRAVEL-1L", "AIRP-RUNWAY", "ROAD-VEGETATED", "ROAD-WINTER", "TRUCK-TRAIL"]
+    gdf = gpd.GeoDataFrame(
+        {"FEATURE_TY": types, "SOURCE": ["x"] * 5, "YEAR": [2020] * 5},
+        geometry=[LineString([(0, i * 100), (1000, i * 100)]) for i in range(5)],
+        crs=CRS,
+    )
+    path = tmp_path / "hfi.gpkg"
+    gdf.to_file(path, layer=LAYER, driver="GPKG")
+
+    assert sorted(load_roads(path)["FEATURE_TY"]) == [
+        "ROAD-GRAVEL-1L", "ROAD-VEGETATED", "ROAD-WINTER", "TRUCK-TRAIL"]
+    assert sorted(load_roads(path, strict=True)["FEATURE_TY"]) == ["ROAD-GRAVEL-1L", "TRUCK-TRAIL"]

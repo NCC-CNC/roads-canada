@@ -48,6 +48,7 @@ and fallbacks in `docs/decisions/0002-technology-stack.md`.
   resumable multi-province run; results in `data/processed/<YYMMDD>/<slug>/`, failures in `errors.log`.
   Use `nrn` in place of `<YYMMDD>` to run the National Road Network instead of OSM (issue #4).
 - `uv run python src/roadless/bcdra_roadless.py [--strict]`: BC Digital Road Atlas (issue #4).
+- `uv run python src/roadless/abhfi_roadless.py [--strict]`: Alberta Human Footprint Inventory (issue #4).
 
 Keep `CONTRIBUTING.md` Setup in step.
 
