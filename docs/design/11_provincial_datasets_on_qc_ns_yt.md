@@ -71,7 +71,7 @@ git), with labels `on`, `qc`, `ns`, `yt` and a `_strict` suffix.
 
 | Jurisdiction | Dataset in note 02 | Outcome |
 | --- | --- | --- |
-| New Brunswick | Forest Roads (IRIU portal) | Portal returns 401 (authorization required). GeoNB's Resource Roads layer is a display layer with no query or download. NRN is the only usable source. |
+| New Brunswick | Forest Roads (IRIU portal) | Resolved in note 13: the portal now serves it and it is on Socrata (gnb.socrata.com udwq-sw5i). |
 | Manitoba | Manitoba Road Network 2023 | 1,476 provincial route lines, not a full network. Not useful. |
 | Saskatchewan | Updated Road Network (SURN) | It is NRN-derived: 250,991 km against 249,914 km in the NRN. No new roads. Not run. |
 | Prince Edward Island | PEI NRN service | A newer NRN edition (19,758 segments); would change the NRN result by under 1 point. Not run. |
