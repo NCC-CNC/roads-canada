@@ -37,6 +37,16 @@ uv run python src/roadless/bcdra_roadless.py [--strict]
 uv run python src/roadless/abhfi_roadless.py [--strict]
 # Ontario, Quebec, Nova Scotia, Yukon provincial datasets (downloads on first run; 1 to 10 minutes each)
 for p in on qc ns yt; do uv run python src/roadless/${p}_roadless.py [--strict]; done
+# New Brunswick (NBRN plus Forest Roads), then NL, MB and NT with resource-road sources
+uv run python src/roadless/nb_roadless.py
+for p in nl mb; do uv run python src/roadless/${p}_roadless.py [--strict]; done
+uv run python src/roadless/nt_roadless.py
+# Paper Tables 2 and 4 to CSV, comparison with our runs, consolidated table
+uv run python src/roadless/paper_tables.py
+uv run python src/roadless/compare_to_paper.py
+uv run python src/roadless/summary_table.py
+# Why Alberta HFI 2023 differs from the paper (needs the abhfi_strict run)
+uv run python src/roadless/abhfi_diagnostics.py
 ```
 
 Run the tests with `uv run pytest`. There is no lint step yet; CI runs whatever
