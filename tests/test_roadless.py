@@ -103,3 +103,65 @@ def test_abhfi_loader_filters(tmp_path):
     assert sorted(load_roads(path)["FEATURE_TY"]) == [
         "ROAD-GRAVEL-1L", "ROAD-VEGETATED", "ROAD-WINTER", "TRUCK-TRAIL"]
     assert sorted(load_roads(path, strict=True)["FEATURE_TY"]) == ["ROAD-GRAVEL-1L", "TRUCK-TRAIL"]
+
+
+def test_ontario_loader_filters(tmp_path):
+    from on_roadless import load_roads
+
+    line = lambda y: LineString([(0, y), (1000, y)])  # noqa: E731
+    orn = gpd.GeoDataFrame(
+        {"OGF_ID": [1, 2, 3], "ROAD_ELEMENT_TYPE": ["ROAD ELEMENT", "FERRY CONNECTION", "VIRTUAL ROAD"]},
+        geometry=[line(0), line(100), line(200)], crs="EPSG:4326")
+    mnr = gpd.GeoDataFrame(
+        {"OGF_ID": [4, 5], "STATUS": ["Open", "Closed"],
+         "ROADBED_DESTROYED_IND": ["No", "No"], "ROADBED_PLANTED_IND": ["No", "No"]},
+        geometry=[line(300), line(400)], crs="EPSG:4326")
+    orn.to_file(tmp_path / "orn.gpkg", layer="roads", driver="GPKG")
+    mnr.to_file(tmp_path / "mnr.gpkg", layer="roads", driver="GPKG")
+
+    assert len(load_roads(tmp_path / "orn.gpkg", tmp_path / "mnr.gpkg")) == 4  # ferry out
+    assert len(load_roads(tmp_path / "orn.gpkg", tmp_path / "mnr.gpkg", strict=True)) == 2
+
+
+def test_quebec_loader_filters(tmp_path):
+    from qc_roadless import LAYER, load_roads
+
+    gdf = gpd.GeoDataFrame(
+        {"IdRte": range(4), "ClsRte": ["Locale", "Rue piétonne", "Liaison maritime", None],
+         "CaractRte": [None, None, None, "Chemin privé"], "Gestion": ["FORET"] * 4},
+        geometry=[LineString([(0, i * 100), (1000, i * 100)]) for i in range(4)], crs=CRS)
+    gdf.to_file(tmp_path / "rqtt.gpkg", layer=LAYER, driver="GPKG")
+
+    assert sorted(load_roads(tmp_path / "rqtt.gpkg")["IdRte"]) == [0, 3]
+    assert sorted(load_roads(tmp_path / "rqtt.gpkg", strict=True)["IdRte"]) == [0]
+
+
+def test_nova_scotia_loader_filters(tmp_path):
+    from ns_roadless import load_roads
+
+    descs = ["TRACK", "DRIVEWAY", "TRAIL  - No Vehicular Traffic - No Vehicular Traffic",
+             "ROAD - Abandoned - TRACK", "ROAD - Local - 2 Lanes - Paved"]
+    gdf = gpd.GeoDataFrame(
+        {"feat_code": ["a"] * 5, "feat_desc": descs},
+        geometry=[LineString([(0, i * 100), (1000, i * 100)]) for i in range(5)], crs=CRS)
+    gdf.to_file(tmp_path / "ns.gpkg", layer="roads", driver="GPKG")
+
+    assert sorted(load_roads(tmp_path / "ns.gpkg")["feat_desc"]) == [
+        "ROAD - Abandoned - TRACK", "ROAD - Local - 2 Lanes - Paved", "TRACK"]
+    assert sorted(load_roads(tmp_path / "ns.gpkg", strict=True)["feat_desc"]) == [
+        "ROAD - Local - 2 Lanes - Paved", "TRACK"]
+
+
+def test_yukon_loader_filters(tmp_path):
+    from yt_roadless import load_roads
+
+    line = lambda y: LineString([(0, y), (1000, y)])  # noqa: E731
+    net = gpd.GeoDataFrame({"ROAD_TYPE": ["Local / Street", "Winter", "Driveway"]},
+                           geometry=[line(0), line(100), line(200)], crs="EPSG:4326")
+    forest = gpd.GeoDataFrame({"ROAD_CLASS": ["Primary Road", "Trail"]},
+                              geometry=[line(300), line(400)], crs="EPSG:4326")
+    net.to_file(tmp_path / "n.gpkg", layer="roads", driver="GPKG")
+    forest.to_file(tmp_path / "f.gpkg", layer="roads", driver="GPKG")
+
+    assert len(load_roads(tmp_path / "n.gpkg", tmp_path / "f.gpkg")) == 5
+    assert len(load_roads(tmp_path / "n.gpkg", tmp_path / "f.gpkg", strict=True)) == 2
