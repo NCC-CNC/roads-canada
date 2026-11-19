@@ -165,3 +165,22 @@ def test_yukon_loader_filters(tmp_path):
 
     assert len(load_roads(tmp_path / "n.gpkg", tmp_path / "f.gpkg")) == 5
     assert len(load_roads(tmp_path / "n.gpkg", tmp_path / "f.gpkg", strict=True)) == 2
+
+
+def test_paper_tables_extract():
+    import csv
+    import subprocess
+    import sys
+    import tempfile
+    from pathlib import Path
+
+    root = Path(__file__).resolve().parents[1]
+    pdf = root / "data/external/poley2022/Poley_et_al_2022_Roadless_Areas_Canada.pdf"
+    with tempfile.TemporaryDirectory() as d:
+        subprocess.run([sys.executable, str(root / "src/roadless/paper_tables.py"), str(pdf), d], check=True)
+        t4 = list(csv.DictReader(open(Path(d) / "poley2022_table4_roadless.csv")))
+        t2 = list(csv.DictReader(open(Path(d) / "poley2022_table2_road_length.csv")))
+    assert len(t4) == 30 and len(t2) == 70
+    for r in t4:
+        calc = int(r["roadless_km2"]) / int(r["area_km2"]) * 100
+        assert abs(calc - float(r["pct_roadless"])) < 1, r
