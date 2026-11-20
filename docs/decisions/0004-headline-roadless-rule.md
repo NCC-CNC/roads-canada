@@ -25,6 +25,8 @@ number needs one stated rule. Evidence is in
 
 - Alberta is published as 36.4% (range to 44.2%), which is below the paper's
   47.0%. The gap is explained in note 12 and stays visible rather than hidden.
+- Alberta: the headline is the current edition (HFI 2023). The 2018 run, which
+  reproduces the paper (note 18), is shown as the paper-comparable figure.
 - Jurisdictions with no strict variant (NB, NT) show a single figure.
 - The rule is applied by `summary_table.py`; any published number must come from
   its output.

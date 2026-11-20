@@ -40,6 +40,32 @@ difference. The 2018 file holds 56,000 km less road than 2023.
   and the baseline for change over time (2018 to 2023: 46.5% to 36.4%; note 12
   attributes most of that to road types mapped in 2023, not to new construction). Which of the
   two the project reports for Alberta is the owner's call.
-- The ABMI page names no licence and links to its Terms and Conditions, which
-  have not been read. Tracked in #32; the 2023 metadata terms (free for
-  non-profit use with acknowledgement, no resale) are the working assumption.
+- Alberta headline (decided 2026-11-19, owner): report the current edition
+  (2023) as the headline, and show the 2018 run as the figure comparable with
+  the paper.
+
+## Licence (read 2026-11-20, for issue #32)
+
+- **Metadata section 9** (2018 PDF) splits the data into three classes:
+  proprietary-sourced ("shall not be used or reproduced in whole or in part or
+  in any form"), open-sourced, and ABMI-sourced. The last two may be
+  reproduced in any form for educational, data collection or non-profit
+  purposes with acknowledgement of the source; no resale without written
+  permission from the ABMI.
+- **We cannot tell which class a road row belongs to.** In the roads layer
+  1,047,791 of 1,080,346 lines (373,611 of 392,116 km) have a null `SOURCE`;
+  the rest are ABMI00, 16, 17 and 18. Open-sourced base features are tagged
+  BASEFE elsewhere in the metadata (Government of Alberta Open Data Licence),
+  and no road row carries that tag.
+- **ABMI Terms and Conditions** (abmi.ca/abmi-home/terms-and-conditions): the
+  ABMI must be acknowledged as the source; no licence is named; no general
+  redistribution terms for data; products are provided as is.
+- **What this allows us:** publishing area statistics and maps derived from the
+  data, with acknowledgement, is within the non-profit terms. Redistributing the
+  roads layer itself is not cleared, and may be barred for any proprietary part.
+  This project does not redistribute it (`data/raw/` is ignored).
+- **Citation** (metadata section 8): ABMI Human Footprint Inventory:
+  Wall-to-Wall Human Footprint Inventory. 2018. Edmonton, AB: Alberta
+  Biodiversity Monitoring Institute and Alberta Human Footprint Monitoring
+  Program, March 2020.
+- Open question for the ABMI: which road rows, if any, are proprietary-sourced.
