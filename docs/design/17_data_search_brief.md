@@ -27,7 +27,10 @@ says "private share only" and names no licence (issue #32).
 
 Priority order.
 
-### 1. Alberta HFI 2018, unclipped (largest gap)
+### 1. Alberta HFI 2018, unclipped (done 2026-11-20)
+
+Resolved: the lead author supplied the ABMI link; see note 18. It reproduces
+the paper (46.5% against 47.0%). Kept below for the record.
 
 - Why: our 2023 edition gives 36.4% against the paper's 47.0%. Most of the gap
   is explained by new road classes; the rest is one block (paper 91,101 km2,
@@ -71,7 +74,10 @@ Priority order.
 
 ### 5. Licence and sharing terms
 
-- Poley compilation: terms from the authors (email sent 2026-11-19).
+- Poley compilation: terms from the authors (email sent 2026-11-19). Reply
+  2026-11-20: WCS will tell the BC Government it intends to redistribute
+  altered BC data and expects to share the full dataset; not yet confirmed.
+  Follow up with the lead author in early 2027.
 - Yukon road layers: licence unverified.
 - BC DRA ("Access Only"), ABMI (no resale), NT winter road inference.
 - Tracked in issue #32.
