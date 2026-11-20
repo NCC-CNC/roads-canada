@@ -34,7 +34,7 @@ uv run python src/roadless/run_regions.py nrn "Nova Scotia" Yukon
 # BC Digital Road Atlas (about 15 minutes; --strict also drops trails and decommissioned roads)
 uv run python src/roadless/bcdra_roadless.py [--strict]
 # Alberta Human Footprint Inventory (4.8 GB download, about 5 minutes per variant)
-uv run python src/roadless/abhfi_roadless.py [--strict]
+uv run python src/roadless/abhfi_roadless.py [--strict] [--2018]
 # Ontario, Quebec, Nova Scotia, Yukon provincial datasets (downloads on first run; 1 to 10 minutes each)
 for p in on qc ns yt; do uv run python src/roadless/${p}_roadless.py [--strict]; done
 # New Brunswick (NBRN plus Forest Roads), then NL, MB and NT with resource-road sources

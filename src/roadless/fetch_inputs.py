@@ -130,6 +130,24 @@ def fetch_abhfi() -> Path:
     return gdb
 
 
+ABHFI_2018_URL = "https://ftp-public.abmi.ca/GISData/HumanFootprint/2018/HFI_2018_v1.gdb.zip"
+
+
+def fetch_abhfi_2018() -> Path:
+    """Alberta Human Footprint Inventory 2018 (ABMI), about 3.4 GB zip.
+
+    The edition the paper used (note 12). The ABMI page names no licence; see
+    its Terms and Conditions (issue #32). Extracts to data/raw/ab_hfi_2018/extracted/.
+    """
+    d = RAW / "ab_hfi_2018"
+    zip_path = download(ABHFI_2018_URL, d / "HFI_2018_v1.gdb.zip")
+    gdb = d / "extracted" / "HFI_2018_v1.gdb"
+    if not gdb.exists():
+        with zipfile.ZipFile(zip_path) as z:
+            z.extractall(d / "extracted")
+    return gdb
+
+
 def _arcgis_json(url: str, params: dict, tries: int = 5) -> dict:
     q = urllib.parse.urlencode(params)
     for i in range(tries):

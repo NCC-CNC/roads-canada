@@ -19,8 +19,8 @@ roadless-area numbers. See `docs/design/00_project_brief.md`.
 
 Prototype stage. Roadless-area scripts exist for OSM, NRN and provincial or
 resource-road datasets (all 13 jurisdictions), plus OSM change detection and a
-comparison with the paper's Table 4 (notes 05 to 16). Open decisions: the
-headline rule (note 15), sending the data requests (note 16), and licence
+comparison with the paper's Table 4 (notes 05 to 16). Headline rule decided
+(ADR 0004). Open decisions: sending the data requests (note 16), and licence
 review (note 06). Open GitHub issues are the live task tracker.
 
 ## Scope
@@ -50,7 +50,8 @@ and fallbacks in `docs/decisions/0002-technology-stack.md`.
   resumable multi-province run; results in `data/processed/<YYMMDD>/<slug>/`, failures in `errors.log`.
   Use `nrn` in place of `<YYMMDD>` to run the National Road Network instead of OSM (issue #4).
 - `uv run python src/roadless/bcdra_roadless.py [--strict]`: BC Digital Road Atlas (issue #4).
-- `uv run python src/roadless/abhfi_roadless.py [--strict]`: Alberta Human Footprint Inventory (issue #4).
+- `uv run python src/roadless/abhfi_roadless.py [--strict] [--2018]`: Alberta Human Footprint Inventory;
+  `--2018` is the paper's edition and reproduces Table 4 (issue #4; note 18).
 - `uv run python src/roadless/{on,qc,ns,yt}_roadless.py [--strict]`: Ontario, Quebec, Nova Scotia and Yukon provincial datasets (issue #4; note 11).
 - `uv run python src/roadless/paper_tables.py` then `compare_to_paper.py`: extract the paper's
   Tables 2 and 4 to CSV, and compare our runs with Table 4 (note 12).
